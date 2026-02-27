@@ -1,0 +1,279 @@
+// This is your Prisma schema file
+// Learn more: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Enum for user roles
+enum UserRole {
+  CUSTOMER
+  PROVIDER
+  ADMIN
+}
+
+// Enum for booking status
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  REJECTED
+}
+
+// Enum for payment status
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+// Enum for provider status
+enum ProviderStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  SUSPENDED
+  ACTIVE
+}
+
+// User model (for customers and admins)
+model User {
+  id            String    @id @default(uuid())
+  name          String
+  email         String    @unique
+  password      String
+  phone         String?
+  role          UserRole  @default(CUSTOMER)
+  avatar        String?
+  address       String?
+  city          String?
+  isActive      Boolean   @default(true)
+  isVerified    Boolean   @default(false)
+  verificationToken String?
+  resetPasswordToken String?
+  resetPasswordExpires DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  bookings      Booking[]
+  reviews       Review[]
+  notifications Notification[]
+
+  @@map("users")
+}
+
+// Provider model (service providers)
+model Provider {
+  id            String         @id @default(uuid())
+  name          String
+  email         String         @unique
+  password      String
+  phone         String
+  bio           String?
+  experience    Int?           // Years of experience
+  avatar        String?
+  coverImage    String?
+  address       String
+  city          String
+  location      String         // Area/locality
+  latitude      Float?
+  longitude     Float?
+  status        ProviderStatus @default(PENDING)
+  isVerified    Boolean        @default(false)
+  isActive      Boolean        @default(true)
+  rating        Float          @default(0)
+  totalReviews  Int            @default(0)
+  totalBookings Int            @default(0)
+  completionRate Float         @default(0)
+  responseTime  String?        // e.g., "2-4 hours"
+  joinedDate    DateTime       @default(now())
+  verificationToken String?
+  documents     Json?          // Store document URLs (CNIC, certificates)
+  availability  Json?          // Store availability schedule
+  bankDetails   Json?          // Store bank account info
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  // Relations
+  services      ProviderService[]
+  bookings      Booking[]
+  reviews       Review[]
+  notifications Notification[]
+
+  @@map("providers")
+}
+
+// Service categories
+model Service {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  category    String
+  description String?
+  icon        String?
+  basePrice   Float
+  duration    String?  // e.g., "2-3 hours"
+  isPopular   Boolean  @default(false)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  providers   ProviderService[]
+  bookings    Booking[]
+
+  @@map("services")
+}
+
+// Junction table for providers and services (many-to-many)
+model ProviderService {
+  id          String   @id @default(uuid())
+  providerId  String
+  serviceId   String
+  price       Float    // Provider's price for this service
+  description String?  // Provider's specific description
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  provider    Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  service     Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@unique([providerId, serviceId])
+  @@map("provider_services")
+}
+
+// Booking model
+model Booking {
+  id              String        @id @default(uuid())
+  bookingNumber   String        @unique // e.g., "BOOK-12345"
+  customerId      String
+  providerId      String
+  serviceId       String
+  serviceName     String        // Denormalized for easier queries
+  date            DateTime
+  timeSlot        String
+  status          BookingStatus @default(PENDING)
+  price           Float
+  platformFee     Float         @default(0)
+  totalAmount     Float
+  address         String
+  area            String
+  city            String
+  coordinates     Json?         // {lat, lng}
+  notes           String?
+  jobDescription  String?
+  cancellationReason String?
+  completedAt     DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  // Relations
+  customer        User          @relation(fields: [customerId], references: [id])
+  provider        Provider      @relation(fields: [providerId], references: [id])
+  service         Service       @relation(fields: [serviceId], references: [id])
+  payment         Payment?
+  review          Review?
+
+  @@map("bookings")
+}
+
+// Payment model
+model Payment {
+  id              String        @id @default(uuid())
+  bookingId       String        @unique
+  amount          Float
+  platformFee     Float
+  providerAmount  Float         // Amount provider receives
+  paymentMethod   String        // e.g., "stripe", "card", "cash"
+  status          PaymentStatus @default(PENDING)
+  transactionId   String?       // Stripe transaction ID
+  stripePaymentIntentId String?
+  paidAt          DateTime?
+  refundedAt      DateTime?
+  refundAmount    Float?
+  metadata        Json?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  // Relations
+  booking         Booking       @relation(fields: [bookingId], references: [id])
+
+  @@map("payments")
+}
+
+// Review and Rating model
+model Review {
+  id          String   @id @default(uuid())
+  bookingId   String   @unique
+  customerId  String
+  providerId  String
+  rating      Float    // 1-5
+  comment     String?
+  response    String?  // Provider's response to review
+  isVisible   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  booking     Booking  @relation(fields: [bookingId], references: [id])
+  customer    User     @relation(fields: [customerId], references: [id])
+  provider    Provider @relation(fields: [providerId], references: [id])
+
+  @@map("reviews")
+}
+
+// Notification model
+model Notification {
+  id          String   @id @default(uuid())
+  userId      String?
+  providerId  String?
+  title       String
+  message     String
+  type        String   // e.g., "booking", "payment", "review"
+  isRead      Boolean  @default(false)
+  metadata    Json?    // Additional data
+  createdAt   DateTime @default(now())
+
+  // Relations
+  user        User?     @relation(fields: [userId], references: [id])
+  provider    Provider? @relation(fields: [providerId], references: [id])
+
+  @@map("notifications")
+}
+
+// City/Location model (for service availability)
+model City {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  state       String?
+  country     String   @default("Pakistan")
+  isActive    Boolean  @default(true)
+  areas       Json?    // Array of areas/localities
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("cities")
+}
+
+// Admin settings/configuration
+model Setting {
+  id          String   @id @default(uuid())
+  key         String   @unique
+  value       String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("settings")
+}

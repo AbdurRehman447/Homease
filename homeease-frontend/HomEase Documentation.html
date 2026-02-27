@@ -1,0 +1,3403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HomEase Frontend - Developer Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #000;
+            background-color: #fff;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #000;
+        }
+        
+        h2 {
+            font-size: 2em;
+            margin-top: 40px;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #000;
+        }
+        
+        h3 {
+            font-size: 1.5em;
+            margin-top: 30px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+        }
+        
+        h4 {
+            font-size: 1.2em;
+            margin-top: 20px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        p {
+            margin-bottom: 12px;
+            text-align: justify;
+        }
+        
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 6px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            background-color: #f4f4f4;
+            border: 1px solid #ddd;
+            border-left: 4px solid #000;
+            padding: 15px;
+            overflow-x: auto;
+            margin-bottom: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            border: 1px solid #000;
+        }
+        
+        th {
+            background-color: #000;
+            color: #fff;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .note {
+            background-color: #f4f4f4;
+            border-left: 4px solid #000;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .important {
+            font-weight: 600;
+            text-decoration: underline;
+        }
+        
+        .file-tree {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 20px;
+        }
+        
+        .toc {
+            background-color: #f4f4f4;
+            border: 2px solid #000;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .toc h2 {
+            margin-top: 0;
+            border-bottom: none;
+        }
+        
+        .toc ul {
+            list-style-type: none;
+            margin-left: 0;
+        }
+        
+        .toc a {
+            color: #000;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .toc a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>HomEase Frontend Application</h1>
+        <p><strong>Developer Documentation</strong></p>
+        <p>A comprehensive guide to understanding the HomEase home services marketplace platform frontend architecture, implementation, and component structure.</p>
+    </header>
+
+    <div class="toc">
+        <h2>Table of Contents</h2>
+        <ul>
+            <li><a href="#overview">1. Project Overview</a></li>
+            <li><a href="#technologies">2. Technology Stack</a></li>
+            <li><a href="#architecture">3. Application Architecture</a></li>
+            <li><a href="#file-structure">4. File Structure</a></li>
+            <li><a href="#core-files">5. Core Application Files</a></li>
+            <li><a href="#context">6. Context API Implementation</a></li>
+            <li><a href="#components">7. Component Documentation</a></li>
+            <li><a href="#pages">8. Page Components</a></li>
+            <li><a href="#data-models">9. Data Models</a></li>
+            <li><a href="#routing">10. Routing Configuration</a></li>
+            <li><a href="#features">11. Key Features</a></li>
+            <li><a href="#future">12. Future Enhancements</a></li>
+        </ul>
+    </div>
+
+    <div id="overview" class="section">
+        <h2>1. Project Overview</h2>
+        <p>HomEase is a modern, responsive web application designed to connect customers with verified home service providers. The platform facilitates the entire service booking lifecycle, from provider discovery to booking management, through an intuitive and user-friendly interface.</p>
+        
+        <h3>1.1 Application Purpose</h3>
+        <p>The application serves three distinct user roles:</p>
+        <ul>
+            <li><strong>Customers:</strong> Browse and book home services such as plumbing, electrical work, cleaning, painting, and more.</li>
+            <li><strong>Service Providers:</strong> Register their services, manage booking requests, and handle customer interactions.</li>
+            <li><strong>Administrators:</strong> Oversee platform operations, manage users, monitor bookings, and analyze platform metrics.</li>
+        </ul>
+        
+        <h3>1.2 Core Functionality</h3>
+        <ul>
+            <li>City-based service discovery with location filtering</li>
+            <li>Advanced search and filtering capabilities</li>
+            <li>Comprehensive booking system with detailed form inputs</li>
+            <li>Multi-step provider registration process</li>
+            <li>Role-based dashboards for customers, providers, and administrators</li>
+            <li>Authentication and session management</li>
+            <li>Responsive design for mobile, tablet, and desktop devices</li>
+        </ul>
+    </div>
+
+    <div id="technologies" class="section">
+        <h2>2. Technology Stack</h2>
+        
+        <h3>2.1 React 19.2.0</h3>
+        <p><strong>Role:</strong> Core JavaScript library for building user interfaces.</p>
+        <p><strong>Description:</strong> React is a declarative, component-based library developed by Facebook. Version 19.2.0 represents the latest stable release with improved performance, concurrent features, and automatic batching of state updates.</p>
+        <p><strong>Key Features Used:</strong></p>
+        <ul>
+            <li>Functional components with hooks (useState, useEffect, useContext)</li>
+            <li>Component composition and reusability</li>
+            <li>Virtual DOM for efficient rendering</li>
+            <li>JSX syntax for declarative UI</li>
+        </ul>
+        
+        <h3>2.2 Vite (rolldown-vite 7.2.5)</h3>
+        <p><strong>Role:</strong> Build tool and development server.</p>
+        <p><strong>Description:</strong> Vite is a next-generation frontend build tool that leverages native ES modules for incredibly fast hot module replacement (HMR) during development. Rolldown-vite is an optimized variant that uses the Rolldown bundler for enhanced performance.</p>
+        <p><strong>Advantages:</strong></p>
+        <ul>
+            <li>Instant server start with on-demand compilation</li>
+            <li>Lightning-fast Hot Module Replacement (HMR)</li>
+            <li>Optimized production builds with code splitting</li>
+            <li>Native ES module support</li>
+        </ul>
+        
+        <h3>2.3 React Router DOM 7.10.1</h3>
+        <p><strong>Role:</strong> Client-side routing library.</p>
+        <p><strong>Description:</strong> React Router DOM enables navigation between different views in a single-page application without full page reloads. It provides declarative routing with URL synchronization and nested routes support.</p>
+        <p><strong>Implementation:</strong></p>
+        <ul>
+            <li>BrowserRouter for HTML5 history API</li>
+            <li>Route components for path-based rendering</li>
+            <li>useNavigate hook for programmatic navigation</li>
+            <li>useLocation and useSearchParams for URL state management</li>
+            <li>Link component for declarative navigation</li>
+        </ul>
+        
+        <h3>2.4 Tailwind CSS 4.1.18</h3>
+        <p><strong>Role:</strong> Utility-first CSS framework.</p>
+        <p><strong>Description:</strong> Tailwind CSS provides low-level utility classes that enable rapid UI development without writing custom CSS. The framework promotes consistency and maintainability through a design system approach.</p>
+        <p><strong>Configuration:</strong></p>
+        <ul>
+            <li>Custom color palette (primary blue and secondary purple)</li>
+            <li>Extended theme configuration</li>
+            <li>Responsive design utilities (sm, md, lg, xl breakpoints)</li>
+            <li>JIT (Just-In-Time) compilation for optimal bundle size</li>
+        </ul>
+        
+        <h3>2.5 Lucide React 0.561.0</h3>
+        <p><strong>Role:</strong> Icon library.</p>
+        <p><strong>Description:</strong> Lucide is a community-maintained fork of Feather Icons, providing a comprehensive set of customizable SVG icons as React components. Icons are tree-shakeable, ensuring only used icons are included in the bundle.</p>
+        <p><strong>Usage:</strong> Throughout the application for visual enhancement of buttons, form fields, navigation items, and informational displays.</p>
+        
+        <h3>2.6 Development Tools</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Tool</th>
+                    <th>Version</th>
+                    <th>Purpose</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>ESLint</td>
+                    <td>9.39.1</td>
+                    <td>JavaScript linting and code quality enforcement</td>
+                </tr>
+                <tr>
+                    <td>PostCSS</td>
+                    <td>8.5.6</td>
+                    <td>CSS transformation and processing</td>
+                </tr>
+                <tr>
+                    <td>Autoprefixer</td>
+                    <td>10.4.22</td>
+                    <td>Automatic vendor prefix addition for CSS</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="architecture" class="section">
+        <h2>3. Application Architecture</h2>
+        
+        <h3>3.1 Architecture Pattern</h3>
+        <p>The application follows a component-based architecture with unidirectional data flow, adhering to React best practices. The architecture separates concerns into distinct layers:</p>
+        <ul>
+            <li><strong>Presentation Layer:</strong> React components (both container and presentational)</li>
+            <li><strong>State Management:</strong> React Context API for global state</li>
+            <li><strong>Data Layer:</strong> JSON files simulating backend data</li>
+            <li><strong>Routing Layer:</strong> React Router for navigation</li>
+        </ul>
+        
+        <h3>3.2 State Management Strategy</h3>
+        <p>The application uses React's Context API for managing authentication state globally. This approach was chosen for its simplicity and sufficiency for the current application scope.</p>
+        <p><strong>AuthContext</strong> manages:</p>
+        <ul>
+            <li>Current user information</li>
+            <li>Authentication status</li>
+            <li>Login/logout/signup operations</li>
+            <li>User role identification</li>
+            <li>LocalStorage persistence</li>
+        </ul>
+        
+        <h3>3.3 Component Hierarchy</h3>
+        <pre>
+App (BrowserRouter + AuthProvider)
+├── AppContent
+│   ├── Navbar (conditional)
+│   ├── Routes
+│   │   ├── Public Routes (Home, Services, Login, etc.)
+│   │   ├── Customer Routes (CustomerDashboard)
+│   │   ├── Provider Routes (ProviderDashboard)
+│   │   └── Admin Routes (AdminDashboard, AdminBookings, etc.)
+│   └── Footer (conditional)
+        </pre>
+    </div>
+
+    <div id="file-structure" class="section">
+        <h2>4. File Structure</h2>
+        <p>The HomEase frontend follows a modular, organized structure that separates concerns and promotes maintainability. Below is a complete breakdown of the project directory with detailed explanations for each section.</p>
+        
+        <h3>4.1 Complete Project Structure</h3>
+        <pre>
+homeease-frontend/
+│
+├── src/                                    Main application source code
+│   │
+│   ├── components/                         Reusable UI Components (8 files)
+│   │   ├── AdminSidebar.jsx                Admin dashboard navigation sidebar
+│   │   ├── BookingModal.jsx                Comprehensive service booking form modal
+│   │   ├── CustomerSidebar.jsx             Customer dashboard navigation sidebar
+│   │   ├── Footer.jsx                      Global site footer with links and info
+│   │   ├── Navbar.jsx                      Main navigation bar with dropdowns
+│   │   ├── ProviderCard.jsx                Provider profile display card
+│   │   ├── ProviderSidebar.jsx             Provider dashboard navigation sidebar
+│   │   └── ServiceCard.jsx                 Service category display card
+│   │
+│   ├── context/                            Global State Management (1 file)
+│   │   └── AuthContext.jsx                 Authentication state and user session
+│   │
+│   ├── data/                               Mock Data Files (4 files)
+│   │   ├── bookings.json                   Booking transactions data
+│   │   ├── providers.json                  Service provider profiles
+│   │   ├── services.json                   Service categories and pricing
+│   │   └── users.json                      Customer and admin accounts
+│   │
+│   ├── pages/                              Route-Level Page Components (19 files)
+│   │   │
+│   │   ├── Public Pages (10 files)
+│   │   │   ├── Home.jsx                    Landing page with hero and search
+│   │   │   ├── CitySelection.jsx           City picker for service discovery
+│   │   │   ├── Services.jsx                Provider browsing and filtering
+│   │   │   ├── ProviderProfile.jsx         Individual provider detail page
+│   │   │   ├── Login.jsx                   User authentication page
+│   │   │   ├── Signup.jsx                  Customer registration form
+│   │   │   ├── ProviderSignup.jsx          Multi-step provider registration
+│   │   │   ├── HowItWorks.jsx              Platform usage explanation
+│   │   │   ├── About.jsx                   Company information page
+│   │   │   └── FAQ.jsx                     Frequently asked questions
+│   │   │
+│   │   ├── Customer Pages (1 file)
+│   │   │   └── CustomerDashboard.jsx       Customer booking management portal
+│   │   │
+│   │   ├── Provider Pages (1 file)
+│   │   │   └── ProviderDashboard.jsx       Provider business management portal
+│   │   │
+│   │   └── Admin Pages (7 files)
+│   │       ├── AdminDashboard.jsx          Platform overview and metrics
+│   │       ├── AdminBookings.jsx           Booking management interface
+│   │       ├── AdminProviders.jsx          Provider management interface
+│   │       ├── AdminCustomers.jsx          Customer management interface
+│   │       ├── AdminServices.jsx           Service catalog management
+│   │       ├── AdminAnalytics.jsx          Business analytics and charts
+│   │       └── AdminSettings.jsx           Platform configuration settings
+│   │
+│   ├── Root Source Files (4 files)
+│   │   ├── main.jsx                        Application entry point (ReactDOM.render)
+│   │   ├── App.jsx                         Root component with routing setup
+│   │   ├── index.css                       Global styles + Tailwind CSS imports
+│   │   └── App.css                         Application-specific custom styles
+│
+├── public/                                 Static Assets (Served Directly)
+│   └── HomEase icon.png                    Application logo and favicon
+│
+├── Configuration Files (7 files)
+│   ├── package.json                        Dependencies, scripts, project metadata
+│   ├── vite.config.js                      Vite build tool configuration
+│   ├── tailwind.config.js                  Tailwind CSS theme customization
+│   ├── postcss.config.js                   PostCSS processing configuration
+│   ├── eslint.config.js                    Code quality and linting rules
+│   ├── index.html                          HTML template with root div
+│   └── .gitignore                          Git version control exclusions
+│
+└── Documentation Files (Optional)
+    ├── BOOKING_FORM_FEATURES.md            Booking system feature documentation
+    ├── PROVIDER_SIGNUP_FIELDS.md           Provider registration field specs
+    └── README.md                           Project overview and setup guide
+
+
+TOTAL FILE COUNT:
+  - React Components: 8
+  - Pages: 19
+  - Context Providers: 1
+  - Data Files: 4
+  - Root Source Files: 4
+  - Configuration Files: 7
+  - Static Assets: 1
+  - Documentation: 3 (optional)
+  ───────────────────────
+  Core Application Files: 36
+        </pre>
+        
+        <h3>4.2 Source Directory Breakdown (src/)</h3>
+        <p>The src directory contains all application source code, organized into logical subdirectories based on functionality and purpose.</p>
+        
+        <h4>4.2.1 Components Directory (src/components/)</h4>
+        <p><strong>Purpose:</strong> Reusable UI components that can be shared across multiple pages.</p>
+        <p><strong>Characteristics:</strong> These components are typically presentational, accept props for customization, and focus on rendering UI rather than business logic.</p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>File Name</th>
+                    <th>Component Type</th>
+                    <th>Primary Purpose</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>AdminSidebar.jsx</td>
+                    <td>Navigation</td>
+                    <td>Sidebar navigation for admin dashboard with links to all admin features</td>
+                </tr>
+                <tr>
+                    <td>BookingModal.jsx</td>
+                    <td>Form/Modal</td>
+                    <td>Comprehensive booking form modal with 9 sections for service booking</td>
+                </tr>
+                <tr>
+                    <td>CustomerSidebar.jsx</td>
+                    <td>Navigation</td>
+                    <td>Sidebar navigation for customer dashboard with account management links</td>
+                </tr>
+                <tr>
+                    <td>Footer.jsx</td>
+                    <td>Layout</td>
+                    <td>Site footer with links, company info, and social media connections</td>
+                </tr>
+                <tr>
+                    <td>Navbar.jsx</td>
+                    <td>Navigation</td>
+                    <td>Main navigation bar with dropdown menus, auth buttons, and responsive design</td>
+                </tr>
+                <tr>
+                    <td>ProviderCard.jsx</td>
+                    <td>Display Card</td>
+                    <td>Provider information card with ratings, pricing, and booking button</td>
+                </tr>
+                <tr>
+                    <td>ProviderSidebar.jsx</td>
+                    <td>Navigation</td>
+                    <td>Sidebar navigation for provider dashboard with business management links</td>
+                </tr>
+                <tr>
+                    <td>ServiceCard.jsx</td>
+                    <td>Display Card</td>
+                    <td>Service category card showing service details and pricing</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h4>4.2.2 Context Directory (src/context/)</h4>
+        <p><strong>Purpose:</strong> React Context API providers for global state management.</p>
+        <p><strong>Current Implementation:</strong> Contains authentication state management.</p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>File Name</th>
+                    <th>Manages</th>
+                    <th>Key Functions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>AuthContext.jsx</td>
+                    <td>User authentication state</td>
+                    <td>login(), signup(), logout(), user session persistence</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h4>4.2.3 Data Directory (src/data/)</h4>
+        <p><strong>Purpose:</strong> Mock data files that simulate backend API responses for demo purposes.</p>
+        <p><strong>Note:</strong> In production, these would be replaced with actual API calls to a backend server.</p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>File Name</th>
+                    <th>Data Type</th>
+                    <th>Contains</th>
+                    <th>Record Count (Approx)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>bookings.json</td>
+                    <td>Array of Objects</td>
+                    <td>Booking transactions between customers and providers</td>
+                    <td>10-15 bookings</td>
+                </tr>
+                <tr>
+                    <td>providers.json</td>
+                    <td>Array of Objects</td>
+                    <td>Service provider profiles with ratings, pricing, availability</td>
+                    <td>15-20 providers</td>
+                </tr>
+                <tr>
+                    <td>services.json</td>
+                    <td>Array of Objects</td>
+                    <td>Service categories with descriptions, icons, base pricing</td>
+                    <td>10+ services</td>
+                </tr>
+                <tr>
+                    <td>users.json</td>
+                    <td>Array of Objects</td>
+                    <td>Customer and admin user accounts</td>
+                    <td>5-10 users</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h4>4.2.4 Pages Directory (src/pages/)</h4>
+        <p><strong>Purpose:</strong> Route-level page components that correspond to application URLs.</p>
+        <p><strong>Characteristics:</strong> Container components that compose smaller components, handle data fetching, and implement page-specific logic.</p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>File Name</th>
+                    <th>Category</th>
+                    <th>Route</th>
+                    <th>Access Level</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="4" style="background-color: #f0f0f0; font-weight: bold;">PUBLIC PAGES</td>
+                </tr>
+                <tr>
+                    <td>Home.jsx</td>
+                    <td>Landing</td>
+                    <td>/</td>
+                    <td>Public</td>
+                </tr>
+                <tr>
+                    <td>CitySelection.jsx</td>
+                    <td>Discovery</td>
+                    <td>/select-city</td>
+                    <td>Public</td>
+                </tr>
+                <tr>
+                    <td>Services.jsx</td>
+                    <td>Discovery</td>
+                    <td>/services</td>
+                    <td>Public</td>
+                </tr>
+                <tr>
+                    <td>ProviderProfile.jsx</td>
+                    <td>Discovery</td>
+                    <td>/provider/:id</td>
+                    <td>Public</td>
+                </tr>
+                <tr>
+                    <td>Login.jsx</td>
+                    <td>Authentication</td>
+                    <td>/login</td>
+                    <td>Public</td>
+                </tr>
+                <tr>
+                    <td>Signup.jsx</td>
+                    <td>Authentication</td>
+                    <td>/signup</td>
+                    <td>Public</td>
+                </tr>
+                <tr>
+                    <td>ProviderSignup.jsx</td>
+                    <td>Authentication</td>
+                    <td>/provider/signup</td>
+                    <td>Public</td>
+                </tr>
+                <tr>
+                    <td>HowItWorks.jsx</td>
+                    <td>Informational</td>
+                    <td>/how-it-works</td>
+                    <td>Public</td>
+                </tr>
+                <tr>
+                    <td>About.jsx</td>
+                    <td>Informational</td>
+                    <td>/about</td>
+                    <td>Public</td>
+                </tr>
+                <tr>
+                    <td>FAQ.jsx</td>
+                    <td>Informational</td>
+                    <td>/faq</td>
+                    <td>Public</td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="background-color: #f0f0f0; font-weight: bold;">CUSTOMER PAGES (Protected)</td>
+                </tr>
+                <tr>
+                    <td>CustomerDashboard.jsx</td>
+                    <td>Dashboard</td>
+                    <td>/customer/dashboard</td>
+                    <td>Customer Only</td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="background-color: #f0f0f0; font-weight: bold;">PROVIDER PAGES (Protected)</td>
+                </tr>
+                <tr>
+                    <td>ProviderDashboard.jsx</td>
+                    <td>Dashboard</td>
+                    <td>/provider/dashboard</td>
+                    <td>Provider Only</td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="background-color: #f0f0f0; font-weight: bold;">ADMIN PAGES (Protected)</td>
+                </tr>
+                <tr>
+                    <td>AdminDashboard.jsx</td>
+                    <td>Dashboard</td>
+                    <td>/admin/dashboard</td>
+                    <td>Admin Only</td>
+                </tr>
+                <tr>
+                    <td>AdminBookings.jsx</td>
+                    <td>Management</td>
+                    <td>/admin/bookings</td>
+                    <td>Admin Only</td>
+                </tr>
+                <tr>
+                    <td>AdminProviders.jsx</td>
+                    <td>Management</td>
+                    <td>/admin/providers</td>
+                    <td>Admin Only</td>
+                </tr>
+                <tr>
+                    <td>AdminCustomers.jsx</td>
+                    <td>Management</td>
+                    <td>/admin/customers</td>
+                    <td>Admin Only</td>
+                </tr>
+                <tr>
+                    <td>AdminServices.jsx</td>
+                    <td>Management</td>
+                    <td>/admin/services</td>
+                    <td>Admin Only</td>
+                </tr>
+                <tr>
+                    <td>AdminAnalytics.jsx</td>
+                    <td>Analytics</td>
+                    <td>/admin/analytics</td>
+                    <td>Admin Only</td>
+                </tr>
+                <tr>
+                    <td>AdminSettings.jsx</td>
+                    <td>Configuration</td>
+                    <td>/admin/settings</td>
+                    <td>Admin Only</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h4>4.2.5 Root Source Files</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>File Name</th>
+                    <th>Type</th>
+                    <th>Purpose</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>main.jsx</td>
+                    <td>Entry Point</td>
+                    <td>Application entry point that renders the root App component to the DOM</td>
+                </tr>
+                <tr>
+                    <td>App.jsx</td>
+                    <td>Root Component</td>
+                    <td>Root React component containing routing configuration and global providers</td>
+                </tr>
+                <tr>
+                    <td>index.css</td>
+                    <td>Stylesheet</td>
+                    <td>Global CSS styles and Tailwind CSS imports (@tailwind base, components, utilities)</td>
+                </tr>
+                <tr>
+                    <td>App.css</td>
+                    <td>Stylesheet</td>
+                    <td>Application-specific CSS styles and custom component styles</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h3>4.3 Public Directory</h3>
+        <p>Contains static assets that are served directly without processing by the build tool.</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>File Name</th>
+                    <th>Type</th>
+                    <th>Usage</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>HomEase icon.png</td>
+                    <td>Image Asset</td>
+                    <td>Application logo displayed in navbar and browser tab</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h3>4.4 Root Configuration Files</h3>
+        <p>Project configuration files that control build tools, code quality, and development environment.</p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>File Name</th>
+                    <th>Technology</th>
+                    <th>Configures</th>
+                    <th>Key Settings</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>package.json</td>
+                    <td>Node.js/npm</td>
+                    <td>Project dependencies and scripts</td>
+                    <td>Dependencies list, dev scripts (dev, build, lint, preview)</td>
+                </tr>
+                <tr>
+                    <td>vite.config.js</td>
+                    <td>Vite</td>
+                    <td>Build tool and dev server</td>
+                    <td>React plugin, server port, build optimizations</td>
+                </tr>
+                <tr>
+                    <td>tailwind.config.js</td>
+                    <td>Tailwind CSS</td>
+                    <td>Utility CSS framework</td>
+                    <td>Content paths, custom colors (primary, secondary), theme extensions</td>
+                </tr>
+                <tr>
+                    <td>postcss.config.js</td>
+                    <td>PostCSS</td>
+                    <td>CSS processing</td>
+                    <td>Tailwind CSS plugin, Autoprefixer configuration</td>
+                </tr>
+                <tr>
+                    <td>eslint.config.js</td>
+                    <td>ESLint</td>
+                    <td>Code quality and linting</td>
+                    <td>JavaScript rules, React hooks rules, code style enforcement</td>
+                </tr>
+                <tr>
+                    <td>index.html</td>
+                    <td>HTML</td>
+                    <td>HTML template</td>
+                    <td>Root div element, script tag for main.jsx, meta tags, title</td>
+                </tr>
+                <tr>
+                    <td>.gitignore</td>
+                    <td>Git</td>
+                    <td>Version control exclusions</td>
+                    <td>node_modules, dist, build artifacts, environment files</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h3>4.5 File Organization Principles</h3>
+        
+        <div class="note">
+            <h4>Separation of Concerns</h4>
+            <ul>
+                <li><strong>Components:</strong> Reusable UI elements without route-specific logic</li>
+                <li><strong>Pages:</strong> Route-specific containers that compose components</li>
+                <li><strong>Context:</strong> Global state management isolated from UI logic</li>
+                <li><strong>Data:</strong> Mock data separated from application logic for easy replacement</li>
+            </ul>
+        </div>
+        
+        <div class="note">
+            <h4>Naming Conventions</h4>
+            <ul>
+                <li><strong>React Components:</strong> PascalCase with .jsx extension (e.g., CustomerDashboard.jsx)</li>
+                <li><strong>Configuration Files:</strong> lowercase with .config.js extension (e.g., vite.config.js)</li>
+                <li><strong>CSS Files:</strong> lowercase with .css extension (e.g., index.css)</li>
+                <li><strong>Data Files:</strong> lowercase with .json extension (e.g., services.json)</li>
+            </ul>
+        </div>
+        
+        <div class="note">
+            <h4>Scalability Considerations</h4>
+            <p>The current structure supports growth in the following ways:</p>
+            <ul>
+                <li>Additional components can be added to src/components/ without restructuring</li>
+                <li>New pages can be created in src/pages/ and registered in App.jsx routing</li>
+                <li>Additional context providers can be added to src/context/ for new global state needs</li>
+                <li>Utility functions could be added in a new src/utils/ directory if needed</li>
+                <li>Custom hooks could be organized in a new src/hooks/ directory for reusable logic</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="core-files" class="section">
+        <h2>5. Core Application Files</h2>
+        
+        <h3>5.1 main.jsx</h3>
+        <p><strong>Location:</strong> <code>src/main.jsx</code></p>
+        <p><strong>Purpose:</strong> Application entry point that mounts the React application to the DOM.</p>
+        <p><strong>Functionality:</strong></p>
+        <ul>
+            <li>Imports the root App component</li>
+            <li>Imports global CSS styles (index.css)</li>
+            <li>Uses React 18+ createRoot API for concurrent mode</li>
+            <li>Wraps application in StrictMode for development checks</li>
+        </ul>
+        <pre>
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import './index.css'
+import App from './App.jsx'
+
+createRoot(document.getElementById('root')).render(
+  &lt;StrictMode&gt;
+    &lt;App /&gt;
+  &lt;/StrictMode&gt;,
+)
+        </pre>
+        
+        <h3>5.2 App.jsx</h3>
+        <p><strong>Location:</strong> <code>src/App.jsx</code></p>
+        <p><strong>Purpose:</strong> Root component that sets up routing and global providers.</p>
+        <p><strong>Key Features:</strong></p>
+        <ul>
+            <li>Wraps application in AuthProvider for global authentication state</li>
+            <li>Implements BrowserRouter for client-side routing</li>
+            <li>Contains AppContent component with conditional navbar/footer rendering</li>
+            <li>Defines all application routes</li>
+            <li>Implements route protection logic</li>
+        </ul>
+        
+        <h4>Route Configuration:</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Path</th>
+                    <th>Component</th>
+                    <th>Access</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>/</td>
+                    <td>Home</td>
+                    <td>Public</td>
+                </tr>
+                <tr>
+                    <td>/select-city</td>
+                    <td>CitySelection</td>
+                    <td>Public</td>
+                </tr>
+                <tr>
+                    <td>/services</td>
+                    <td>Services</td>
+                    <td>Public</td>
+                </tr>
+                <tr>
+                    <td>/provider/:id</td>
+                    <td>ProviderProfile</td>
+                    <td>Public</td>
+                </tr>
+                <tr>
+                    <td>/login</td>
+                    <td>Login</td>
+                    <td>Public</td>
+                </tr>
+                <tr>
+                    <td>/signup</td>
+                    <td>Signup</td>
+                    <td>Public</td>
+                </tr>
+                <tr>
+                    <td>/provider/signup</td>
+                    <td>ProviderSignup</td>
+                    <td>Public</td>
+                </tr>
+                <tr>
+                    <td>/customer/dashboard</td>
+                    <td>CustomerDashboard</td>
+                    <td>Protected (Customer)</td>
+                </tr>
+                <tr>
+                    <td>/provider/dashboard</td>
+                    <td>ProviderDashboard</td>
+                    <td>Protected (Provider)</td>
+                </tr>
+                <tr>
+                    <td>/admin/dashboard</td>
+                    <td>AdminDashboard</td>
+                    <td>Protected (Admin)</td>
+                </tr>
+                <tr>
+                    <td>/admin/bookings</td>
+                    <td>AdminBookings</td>
+                    <td>Protected (Admin)</td>
+                </tr>
+                <tr>
+                    <td>/admin/providers</td>
+                    <td>AdminProviders</td>
+                    <td>Protected (Admin)</td>
+                </tr>
+                <tr>
+                    <td>/admin/customers</td>
+                    <td>AdminCustomers</td>
+                    <td>Protected (Admin)</td>
+                </tr>
+                <tr>
+                    <td>/admin/services</td>
+                    <td>AdminServices</td>
+                    <td>Protected (Admin)</td>
+                </tr>
+                <tr>
+                    <td>/admin/analytics</td>
+                    <td>AdminAnalytics</td>
+                    <td>Protected (Admin)</td>
+                </tr>
+                <tr>
+                    <td>/admin/settings</td>
+                    <td>AdminSettings</td>
+                    <td>Protected (Admin)</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h4>Conditional Rendering Logic:</h4>
+        <p>The AppContent component implements logic to hide the navbar and footer on dashboard routes:</p>
+        <pre>
+const isAdminRoute = location.pathname.startsWith('/admin');
+const isCustomerDashboard = location.pathname.startsWith('/customer');
+const isProviderDashboard = location.pathname.startsWith('/provider') 
+                          && location.pathname !== '/provider/signup';
+const isDashboardRoute = isAdminRoute || isCustomerDashboard || isProviderDashboard;
+        </pre>
+        
+        <h3>5.3 index.css</h3>
+        <p><strong>Location:</strong> <code>src/index.css</code></p>
+        <p><strong>Purpose:</strong> Global CSS styles and Tailwind directives.</p>
+        <p><strong>Contents:</strong></p>
+        <ul>
+            <li>Tailwind base, components, and utilities imports</li>
+            <li>Custom CSS animations</li>
+            <li>Global reset styles</li>
+            <li>Font definitions</li>
+        </ul>
+        
+        <h3>5.4 tailwind.config.js</h3>
+        <p><strong>Location:</strong> <code>tailwind.config.js</code></p>
+        <p><strong>Purpose:</strong> Tailwind CSS configuration and theme customization.</p>
+        <p><strong>Customizations:</strong></p>
+        <ul>
+            <li>Content paths for JIT compilation</li>
+            <li>Extended color palette (primary and secondary colors)</li>
+            <li>Custom spacing, typography, and other utilities</li>
+        </ul>
+        
+        <h3>5.5 vite.config.js</h3>
+        <p><strong>Location:</strong> <code>vite.config.js</code></p>
+        <p><strong>Purpose:</strong> Vite build tool configuration.</p>
+        <p><strong>Configuration:</strong></p>
+        <ul>
+            <li>React plugin integration</li>
+            <li>Build optimizations</li>
+            <li>Development server settings</li>
+            <li>Path aliases and module resolution</li>
+        </ul>
+        
+        <h3>5.6 package.json</h3>
+        <p><strong>Location:</strong> <code>package.json</code></p>
+        <p><strong>Purpose:</strong> Project metadata and dependency management.</p>
+        <p><strong>Scripts:</strong></p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Script</th>
+                    <th>Command</th>
+                    <th>Purpose</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>dev</td>
+                    <td>vite</td>
+                    <td>Start development server</td>
+                </tr>
+                <tr>
+                    <td>build</td>
+                    <td>vite build</td>
+                    <td>Create production build</td>
+                </tr>
+                <tr>
+                    <td>lint</td>
+                    <td>eslint .</td>
+                    <td>Run code quality checks</td>
+                </tr>
+                <tr>
+                    <td>preview</td>
+                    <td>vite preview</td>
+                    <td>Preview production build locally</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="context" class="section">
+        <h2>6. Context API Implementation</h2>
+        
+        <h3>6.1 AuthContext.jsx</h3>
+        <p><strong>Location:</strong> <code>src/context/AuthContext.jsx</code></p>
+        <p><strong>Purpose:</strong> Global authentication state management using React Context API.</p>
+        
+        <h4>State Variables:</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Variable</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>currentUser</td>
+                    <td>Object | null</td>
+                    <td>Currently authenticated user data</td>
+                </tr>
+                <tr>
+                    <td>isAuthenticated</td>
+                    <td>Boolean</td>
+                    <td>Authentication status flag</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h4>Functions:</h4>
+        
+        <p><strong>login(email, password, role)</strong></p>
+        <ul>
+            <li>Parameters: email (string), password (string), role (string)</li>
+            <li>Returns: Object with success flag and user data or error message</li>
+            <li>Validates credentials against demo accounts</li>
+            <li>Searches appropriate data source based on role (users.json for customer/admin, providers.json for provider)</li>
+            <li>Sets currentUser and isAuthenticated on success</li>
+            <li>Persists user data to localStorage</li>
+        </ul>
+        
+        <p><strong>signup(userData)</strong></p>
+        <ul>
+            <li>Parameters: userData (object containing user registration information)</li>
+            <li>Returns: Object with success flag and created user data</li>
+            <li>Creates new user object with generated ID and join date</li>
+            <li>Assigns random avatar from pravatar service</li>
+            <li>Authenticates user immediately after signup</li>
+            <li>Stores user in localStorage</li>
+        </ul>
+        
+        <p><strong>logout()</strong></p>
+        <ul>
+            <li>Clears currentUser and isAuthenticated state</li>
+            <li>Removes user data from localStorage</li>
+            <li>Effectively ends the user session</li>
+        </ul>
+        
+        <h4>Demo Credentials:</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Role</th>
+                    <th>Email</th>
+                    <th>Password</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Customer</td>
+                    <td>umar.farooq@example.com</td>
+                    <td>demo123</td>
+                </tr>
+                <tr>
+                    <td>Provider</td>
+                    <td>ahmed.khan@example.com</td>
+                    <td>demo123</td>
+                </tr>
+                <tr>
+                    <td>Admin</td>
+                    <td>admin@homeease.com</td>
+                    <td>admin123</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h4>Context Value:</h4>
+        <p>The context provides the following to consuming components:</p>
+        <pre>
+{
+  currentUser: Object | null,
+  isAuthenticated: Boolean,
+  login: Function,
+  signup: Function,
+  logout: Function,
+  userRole: String | null
+}
+        </pre>
+        
+        <h4>Usage Pattern:</h4>
+        <pre>
+import { useAuth } from '../context/AuthContext';
+
+const MyComponent = () => {
+  const { currentUser, isAuthenticated, login, logout } = useAuth();
+  // Component logic
+};
+        </pre>
+    </div>
+
+    <div id="components" class="section">
+        <h2>7. Component Documentation</h2>
+        
+        <h3>7.1 Navbar.jsx</h3>
+        <p><strong>Location:</strong> <code>src/components/Navbar.jsx</code></p>
+        <p><strong>Purpose:</strong> Main navigation component with responsive design and role-based rendering.</p>
+        
+        <h4>Key Features:</h4>
+        <ul>
+            <li>Sticky positioning at top of viewport</li>
+            <li>Logo with link to home page</li>
+            <li>Services dropdown menu with popular services</li>
+            <li>Navigation links (How It Works, About, FAQ)</li>
+            <li>Conditional authentication buttons or user profile</li>
+            <li>Mobile hamburger menu for responsive design</li>
+            <li>Role-based dashboard link generation</li>
+        </ul>
+        
+        <h4>State Management:</h4>
+        <ul>
+            <li><code>mobileMenuOpen</code>: Boolean - Controls mobile menu visibility</li>
+            <li><code>servicesDropdownOpen</code>: Boolean - Controls services dropdown visibility</li>
+        </ul>
+        
+        <h4>Functions:</h4>
+        <p><strong>handleServicesClick()</strong> - Navigates to city selection page when Services is clicked</p>
+        <p><strong>handleServiceSelect(serviceName)</strong> - Stores selected service in sessionStorage and navigates to city selection</p>
+        <p><strong>getDashboardLink()</strong> - Returns appropriate dashboard URL based on user role</p>
+        <p><strong>handleLogout()</strong> - Calls logout from AuthContext and navigates to home page</p>
+        
+        <h4>Responsive Behavior:</h4>
+        <ul>
+            <li>Desktop: Full horizontal navigation with dropdowns</li>
+            <li>Mobile: Hamburger menu with slide-down navigation</li>
+            <li>Breakpoint: md (768px)</li>
+        </ul>
+        
+        <h3>7.2 Footer.jsx</h3>
+        <p><strong>Location:</strong> <code>src/components/Footer.jsx</code></p>
+        <p><strong>Purpose:</strong> Site footer with links and information.</p>
+        <p><strong>Contents:</strong></p>
+        <ul>
+            <li>Company information and branding</li>
+            <li>Quick links to main pages</li>
+            <li>Social media links</li>
+            <li>Copyright information</li>
+            <li>Contact details</li>
+        </ul>
+        
+        <h3>7.3 ServiceCard.jsx</h3>
+        <p><strong>Location:</strong> <code>src/components/ServiceCard.jsx</code></p>
+        <p><strong>Purpose:</strong> Reusable card component for displaying service information.</p>
+        
+        <h4>Props:</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Prop</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>service</td>
+                    <td>Object</td>
+                    <td>Service data object containing id, name, category, icon, description, basePrice, duration</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h4>Display Elements:</h4>
+        <ul>
+            <li>Service icon (emoji)</li>
+            <li>Service name</li>
+            <li>Service category</li>
+            <li>Description text</li>
+            <li>Base price</li>
+            <li>Estimated duration</li>
+            <li>Link to services page filtered by this service</li>
+        </ul>
+        
+        <h3>7.4 ProviderCard.jsx</h3>
+        <p><strong>Location:</strong> <code>src/components/ProviderCard.jsx</code></p>
+        <p><strong>Purpose:</strong> Display provider information with booking capability.</p>
+        
+        <h4>Props:</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Prop</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>provider</td>
+                    <td>Object</td>
+                    <td>Provider data including name, image, rating, price, location, experience, etc.</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h4>Features:</h4>
+        <ul>
+            <li>Provider profile photo</li>
+            <li>Name with verification badge</li>
+            <li>Star rating display</li>
+            <li>Number of reviews</li>
+            <li>Service category</li>
+            <li>Years of experience</li>
+            <li>Location information</li>
+            <li>Pricing information</li>
+            <li>Book Now button (opens BookingModal)</li>
+            <li>View Profile button (links to provider profile page)</li>
+        </ul>
+        
+        <h4>State:</h4>
+        <ul>
+            <li><code>showBookingModal</code>: Boolean - Controls booking modal visibility</li>
+        </ul>
+        
+        <h3>7.5 BookingModal.jsx</h3>
+        <p><strong>Location:</strong> <code>src/components/BookingModal.jsx</code></p>
+        <p><strong>Purpose:</strong> Comprehensive booking form modal with multi-section input.</p>
+        
+        <h4>Props:</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Prop</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>provider</td>
+                    <td>Object</td>
+                    <td>Provider being booked</td>
+                </tr>
+                <tr>
+                    <td>onClose</td>
+                    <td>Function</td>
+                    <td>Callback to close the modal</td>
+                </tr>
+                <tr>
+                    <td>selectedCity</td>
+                    <td>String</td>
+                    <td>City selected by user for service</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h4>Form Sections:</h4>
+        <ol>
+            <li><strong>Provider Summary</strong> - Read-only display of provider details</li>
+            <li><strong>Service Requirements</strong> - Job description textarea and service type dropdown</li>
+            <li><strong>Date and Time</strong> - Date picker and time slot selection</li>
+            <li><strong>Location Details</strong> - City (auto-filled), area, full address inputs</li>
+            <li><strong>Contact Information</strong> - Name, phone, email (pre-filled if logged in)</li>
+            <li><strong>Price Breakdown</strong> - Base charge, platform fee (10%), total estimate</li>
+            <li><strong>Additional Notes</strong> - Optional special instructions textarea</li>
+            <li><strong>Provider Availability</strong> - Information display</li>
+        </ol>
+        
+        <h4>State Management:</h4>
+        <pre>
+bookingData: {
+  jobDescription: '',
+  serviceType: '',
+  date: '',
+  timeSlot: '',
+  area: '',
+  address: '',
+  fullName: currentUser?.name || '',
+  phone: currentUser?.phone || '',
+  email: currentUser?.email || '',
+  notes: ''
+}
+        </pre>
+        
+        <h4>Booking Flow:</h4>
+        <ol>
+            <li>User fills required fields (marked with asterisk)</li>
+            <li>Form validation on submit</li>
+            <li>Generate demo booking ID (format: DEMO-XXXXXXXXX)</li>
+            <li>Display confirmation screen with booking summary</li>
+            <li>Options to close or navigate to customer dashboard</li>
+        </ol>
+        
+        <h4>Price Calculation:</h4>
+        <pre>
+baseCharge = provider.price
+platformFee = baseCharge * 0.1 (10%)
+totalEstimate = baseCharge + platformFee
+        </pre>
+        
+        <h3>7.6 CustomerSidebar.jsx</h3>
+        <p><strong>Location:</strong> <code>src/components/CustomerSidebar.jsx</code></p>
+        <p><strong>Purpose:</strong> Navigation sidebar for customer dashboard.</p>
+        
+        <h4>Navigation Links:</h4>
+        <ul>
+            <li>Dashboard (overview)</li>
+            <li>My Bookings</li>
+            <li>Browse Services</li>
+            <li>Profile Settings</li>
+            <li>Payment Methods</li>
+            <li>Help and Support</li>
+            <li>Logout</li>
+        </ul>
+        
+        <h4>Features:</h4>
+        <ul>
+            <li>Fixed positioning on left side</li>
+            <li>Active link highlighting</li>
+            <li>Icon integration with Lucide React</li>
+            <li>User profile section at top</li>
+        </ul>
+        
+        <h3>7.7 ProviderSidebar.jsx</h3>
+        <p><strong>Location:</strong> <code>src/components/ProviderSidebar.jsx</code></p>
+        <p><strong>Purpose:</strong> Navigation sidebar for provider dashboard.</p>
+        
+        <h4>Navigation Links:</h4>
+        <ul>
+            <li>Dashboard</li>
+            <li>Booking Requests</li>
+            <li>My Schedule</li>
+            <li>Earnings</li>
+            <li>Profile Settings</li>
+            <li>Reviews</li>
+            <li>Help</li>
+            <li>Logout</li>
+        </ul>
+        
+        <h3>7.8 AdminSidebar.jsx</h3>
+        <p><strong>Location:</strong> <code>src/components/AdminSidebar.jsx</code></p>
+        <p><strong>Purpose:</strong> Navigation sidebar for admin dashboard.</p>
+        
+        <h4>Navigation Links:</h4>
+        <ul>
+            <li>Dashboard</li>
+            <li>Bookings Management</li>
+            <li>Service Providers</li>
+            <li>Customers</li>
+            <li>Services Catalog</li>
+            <li>Analytics</li>
+            <li>Platform Settings</li>
+            <li>Logout</li>
+        </ul>
+    </div>
+
+    <div id="pages" class="section">
+        <h2>8. Page Components</h2>
+        
+        <h3>8.1 Home.jsx</h3>
+        <p><strong>Location:</strong> <code>src/pages/Home.jsx</code></p>
+        <p><strong>Purpose:</strong> Landing page with hero section, search, and service showcase.</p>
+        
+        <h4>Key Sections:</h4>
+        
+        <p><strong>Hero Section:</strong></p>
+        <ul>
+            <li>Large heading with animated text</li>
+            <li>Intelligent search bar with autocomplete</li>
+            <li>Dynamic placeholder rotation (changes every 3 seconds)</li>
+            <li>Service suggestions dropdown with icons and categories</li>
+            <li>Trust signals (ratings, verification badges, same-day service)</li>
+            <li>Category pills for quick navigation</li>
+            <li>Value propositions (no booking fees, free cancellation)</li>
+        </ul>
+        
+        <p><strong>Popular Services Grid:</strong></p>
+        <ul>
+            <li>Displays services marked as popular in services.json</li>
+            <li>Uses ServiceCard component</li>
+            <li>Responsive grid (1 column mobile, 2 tablet, 3 desktop)</li>
+            <li>Link to view all services</li>
+        </ul>
+        
+        <p><strong>How It Works Section:</strong></p>
+        <ul>
+            <li>Three-step process explanation</li>
+            <li>Icon-based visual representation</li>
+            <li>Clear, concise copy</li>
+        </ul>
+        
+        <p><strong>Features Section:</strong></p>
+        <ul>
+            <li>Four key benefits (Verified Professionals, Best Prices, Quality Service, Quick Booking)</li>
+            <li>Card-based layout</li>
+            <li>Icons for visual appeal</li>
+        </ul>
+        
+        <p><strong>CTA Section:</strong></p>
+        <ul>
+            <li>Call-to-action buttons</li>
+            <li>Browse Services button (navigates to city selection)</li>
+            <li>Sign Up Free button</li>
+        </ul>
+        
+        <h4>State Management:</h4>
+        <ul>
+            <li><code>searchQuery</code>: String - Current search input</li>
+            <li><code>showSuggestions</code>: Boolean - Controls autocomplete visibility</li>
+            <li><code>selectedSuggestionIndex</code>: Number - For keyboard navigation</li>
+            <li><code>placeholderIndex</code>: Number - For rotating placeholders</li>
+        </ul>
+        
+        <h4>Functions:</h4>
+        <p><strong>handleSearch(e)</strong> - Stores search query in sessionStorage and navigates to city selection</p>
+        <p><strong>handleSuggestionClick(serviceName)</strong> - Sets selected service and navigates to city selection</p>
+        <p><strong>handleCategoryClick(categoryName)</strong> - Filters by category and navigates to city selection</p>
+        <p><strong>handleKeyDown(e)</strong> - Implements keyboard navigation (ArrowUp, ArrowDown, Enter, Escape)</p>
+        
+        <h3>8.2 CitySelection.jsx</h3>
+        <p><strong>Location:</strong> <code>src/pages/CitySelection.jsx</code></p>
+        <p><strong>Purpose:</strong> Allow users to select their city before browsing services.</p>
+        
+        <h4>Supported Cities:</h4>
+        <p>Karachi, Lahore, Islamabad, Rawalpindi, Faisalabad, Multan, Peshawar, Quetta, Sialkot, Gujranwala, Hyderabad, Bahawalpur</p>
+        
+        <h4>Functionality:</h4>
+        <ul>
+            <li>Grid layout of city cards (4 columns on desktop)</li>
+            <li>City icons for visual identification</li>
+            <li>Click to select city</li>
+            <li>Visual feedback on selection</li>
+            <li>Automatic navigation to services page with city parameter</li>
+            <li>Preserves search query from sessionStorage if present</li>
+        </ul>
+        
+        <h4>Navigation Pattern:</h4>
+        <pre>
+If search query exists:
+  /services?city=CITY&search=QUERY
+Else:
+  /services?city=CITY
+        </pre>
+        
+        <h3>8.3 Services.jsx</h3>
+        <p><strong>Location:</strong> <code>src/pages/Services.jsx</code></p>
+        <p><strong>Purpose:</strong> Browse and filter service providers based on various criteria.</p>
+        
+        <h4>Filter System:</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Filter</th>
+                    <th>Type</th>
+                    <th>Options</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Category</td>
+                    <td>Dropdown</td>
+                    <td>All categories from services.json</td>
+                </tr>
+                <tr>
+                    <td>Search</td>
+                    <td>Text Input</td>
+                    <td>Searches name, service name, description</td>
+                </tr>
+                <tr>
+                    <td>Rating</td>
+                    <td>Dropdown</td>
+                    <td>4.5+, 4.0+, 3.5+, Any Rating</td>
+                </tr>
+                <tr>
+                    <td>Price Range</td>
+                    <td>Dropdown</td>
+                    <td>0-3000, 3000-5000, 5000-7000, 7000+</td>
+                </tr>
+                <tr>
+                    <td>Location</td>
+                    <td>Dropdown</td>
+                    <td>All locations from providers</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h4>Filter Logic Priority:</h4>
+        <ol>
+            <li>City filter (most important - only show providers in selected city)</li>
+            <li>Category filter</li>
+            <li>Search query filter</li>
+            <li>Rating filter</li>
+            <li>Price range filter</li>
+            <li>Location filter (additional refinement within city)</li>
+        </ol>
+        
+        <h4>Features:</h4>
+        <ul>
+            <li>City banner showing selected city with change option</li>
+            <li>Filters sidebar (sticky on desktop)</li>
+            <li>Clear All Filters button</li>
+            <li>Results count display</li>
+            <li>Provider grid using ProviderCard component</li>
+            <li>Empty state with clear filters CTA</li>
+            <li>URL parameter synchronization (filters reflected in URL)</li>
+        </ul>
+        
+        <h4>URL State Management:</h4>
+        <p>Filters are synced with URL using useSearchParams hook:</p>
+        <pre>
+/services?city=Karachi&category=Cleaning&rating=4.5&search=plumber
+        </pre>
+        
+        <h4>Redirect Logic:</h4>
+        <p>If no city is selected, automatically redirects to city selection page using useEffect:</p>
+        <pre>
+useEffect(() => {
+  if (!selectedCity) {
+    navigate('/select-city', { replace: true });
+  }
+}, []);
+        </pre>
+        
+        <h3>8.4 ProviderProfile.jsx</h3>
+        <p><strong>Location:</strong> <code>src/pages/ProviderProfile.jsx</code></p>
+        <p><strong>Purpose:</strong> Detailed provider profile page with comprehensive information.</p>
+        
+        <h4>Information Displayed:</h4>
+        <ul>
+            <li>Provider photo and basic info</li>
+            <li>Rating and reviews count</li>
+            <li>Service category</li>
+            <li>Years of experience</li>
+            <li>Detailed description</li>
+            <li>Pricing information</li>
+            <li>Service area/location</li>
+            <li>Availability schedule</li>
+            <li>Customer reviews (from bookings data)</li>
+            <li>Gallery of work (if available)</li>
+        </ul>
+        
+        <h4>Actions:</h4>
+        <ul>
+            <li>Book Now button (opens BookingModal)</li>
+            <li>Share profile button</li>
+            <li>Save/Favorite provider</li>
+        </ul>
+        
+        <h3>8.5 Login.jsx</h3>
+        <p><strong>Location:</strong> <code>src/pages/Login.jsx</code></p>
+        <p><strong>Purpose:</strong> User authentication page with role selection.</p>
+        
+        <h4>Form Fields:</h4>
+        <ul>
+            <li>Role selector (Customer, Provider, Admin) - Segmented button design</li>
+            <li>Email address input with Mail icon</li>
+            <li>Password input with Lock icon and show/hide toggle</li>
+            <li>Submit button with loading state</li>
+        </ul>
+        
+        <h4>Features:</h4>
+        <ul>
+            <li>Role-based login (validates against appropriate data source)</li>
+            <li>Show/hide password functionality</li>
+            <li>Loading state during authentication</li>
+            <li>Error message display</li>
+            <li>Demo account quick-fill buttons for all three roles</li>
+            <li>Link to signup page</li>
+            <li>Automatic redirect to appropriate dashboard based on role</li>
+        </ul>
+        
+        <h4>Authentication Flow:</h4>
+        <ol>
+            <li>User selects role</li>
+            <li>Enters credentials</li>
+            <li>Calls login function from AuthContext</li>
+            <li>On success, redirects to role-specific dashboard</li>
+            <li>On failure, displays error message</li>
+        </ol>
+        
+        <h4>Demo Account Helpers:</h4>
+        <p>Quick-fill buttons that populate form with demo credentials:</p>
+        <pre>
+useDemoAccount(role) {
+  const credentials = {
+    customer: { email: '...', password: '...' },
+    provider: { email: '...', password: '...' },
+    admin: { email: '...', password: '...' }
+  };
+  // Populate form
+}
+        </pre>
+        
+        <h3>8.6 Signup.jsx</h3>
+        <p><strong>Location:</strong> <code>src/pages/Signup.jsx</code></p>
+        <p><strong>Purpose:</strong> Customer registration form.</p>
+        
+        <h4>Form Fields:</h4>
+        <ul>
+            <li>Full Name</li>
+            <li>Email Address</li>
+            <li>Phone Number</li>
+            <li>Address</li>
+            <li>Password</li>
+            <li>Confirm Password</li>
+        </ul>
+        
+        <h4>Validation:</h4>
+        <ul>
+            <li>All fields required</li>
+            <li>Email format validation</li>
+            <li>Password strength requirements</li>
+            <li>Password confirmation match</li>
+            <li>Phone number format</li>
+        </ul>
+        
+        <h4>Process:</h4>
+        <ol>
+            <li>User fills registration form</li>
+            <li>Form validation</li>
+            <li>Calls signup function from AuthContext</li>
+            <li>User automatically logged in after signup</li>
+            <li>Redirects to customer dashboard</li>
+        </ol>
+        
+        <h3>8.7 ProviderSignup.jsx</h3>
+        <p><strong>Location:</strong> <code>src/pages/ProviderSignup.jsx</code></p>
+        <p><strong>Purpose:</strong> Comprehensive multi-step provider registration.</p>
+        
+        <h4>Multi-Step Structure:</h4>
+        
+        <p><strong>Step 1: Basic Information</strong></p>
+        <ul>
+            <li>Full Name (required)</li>
+            <li>Email Address (required)</li>
+            <li>Phone Number (required)</li>
+            <li>Password (required, with show/hide toggle)</li>
+        </ul>
+        
+        <p><strong>Step 2: Service Information</strong></p>
+        <ul>
+            <li>Service Category (dropdown, required) - Options: House Cleaning, Plumbing, Electrical Work, Painting, Pest Control, AC Repair, Carpentry, Lawn Care, Appliance Repair, Interior Design</li>
+            <li>Sub-services Offered (text input, required)</li>
+            <li>Service Description (textarea, required)</li>
+            <li>Years of Experience (number input, required)</li>
+        </ul>
+        
+        <p><strong>Step 3: Location and Pricing</strong></p>
+        <ul>
+            <li>City (dropdown, required) - Major Pakistani cities</li>
+            <li>Areas Served (text input, required)</li>
+            <li>Willing to Travel (radio, yes/no, required)</li>
+            <li>Starting Price (number input, required)</li>
+            <li>Price Type (radio, required) - Options: Fixed, Hourly, After Inspection</li>
+            <li>Minimum Service Charge (number input, required)</li>
+        </ul>
+        
+        <p><strong>Step 4: Availability and Profile</strong></p>
+        <ul>
+            <li>Available Days (checkboxes, required) - Mon through Sun</li>
+            <li>Available Time Slots (checkboxes, required) - Morning (9am-12pm), Afternoon (12pm-4pm), Evening (4pm-8pm)</li>
+            <li>Emergency Service Available (radio, yes/no, optional)</li>
+            <li>Short Bio (textarea, required)</li>
+            <li>Languages Spoken (text input, optional)</li>
+            <li>Team Size (radio, optional) - Individual or Small Team</li>
+        </ul>
+        
+        <h4>Navigation:</h4>
+        <ul>
+            <li>Progress indicator showing current step (1/4, 2/4, etc.)</li>
+            <li>Next button to advance (disabled if required fields empty)</li>
+            <li>Previous button to go back</li>
+            <li>Submit button on final step</li>
+        </ul>
+        
+        <h4>State Management:</h4>
+        <ul>
+            <li><code>currentStep</code>: Number (1-4)</li>
+            <li><code>formData</code>: Object containing all form fields</li>
+            <li><code>showPassword</code>: Boolean</li>
+            <li><code>isLoading</code>: Boolean</li>
+        </ul>
+        
+        <h4>Functions:</h4>
+        <p><strong>handleDayToggle(day)</strong> - Add/remove day from availableDays array</p>
+        <p><strong>handleTimeSlotToggle(slot)</strong> - Add/remove time slot from availableTimeSlots array</p>
+        <p><strong>nextStep()</strong> - Increment currentStep (max 4)</p>
+        <p><strong>prevStep()</strong> - Decrement currentStep (min 1)</p>
+        <p><strong>handleSubmit()</strong> - Call signup and redirect to provider dashboard</p>
+        
+        <h3>8.8 CustomerDashboard.jsx</h3>
+        <p><strong>Location:</strong> <code>src/pages/CustomerDashboard.jsx</code></p>
+        <p><strong>Purpose:</strong> Customer portal for managing bookings and account.</p>
+        
+        <h4>Layout:</h4>
+        <ul>
+            <li>CustomerSidebar on left (fixed, 64 width units)</li>
+            <li>Main content area on right</li>
+        </ul>
+        
+        <h4>Sections:</h4>
+        
+        <p><strong>Welcome Header:</strong></p>
+        <ul>
+            <li>Personalized greeting with user name</li>
+            <li>Subtitle with brief description</li>
+        </ul>
+        
+        <p><strong>Stats Cards:</strong></p>
+        <ul>
+            <li>Total Bookings count</li>
+            <li>Upcoming bookings count</li>
+            <li>Completed bookings count</li>
+            <li>Each card has icon and color coding</li>
+        </ul>
+        
+        <p><strong>Quick Actions Grid:</strong></p>
+        <ul>
+            <li>Browse Services (links to /services)</li>
+            <li>Rate Service</li>
+            <li>Support</li>
+            <li>Profile</li>
+        </ul>
+        
+        <p><strong>Bookings List:</strong></p>
+        <ul>
+            <li>Displays all customer bookings from bookings.json</li>
+            <li>Shows service name, provider name, date, time, location, price</li>
+            <li>Status badge (confirmed, pending, completed)</li>
+            <li>Action buttons (Details, Rate if completed)</li>
+            <li>Empty state if no bookings with CTA to browse services</li>
+        </ul>
+        
+        <h4>Data Filtering:</h4>
+        <pre>
+myBookings = bookingsData.filter(b => b.customerId === currentUser.id)
+upcomingBookings = myBookings.filter(b => b.status === 'confirmed' || b.status === 'pending')
+completedBookings = myBookings.filter(b => b.status === 'completed')
+        </pre>
+        
+        <h4>Protected Route:</h4>
+        <p>Uses useEffect to redirect unauthenticated users to login:</p>
+        <pre>
+useEffect(() => {
+  if (!isAuthenticated || !currentUser) {
+    navigate('/login', { replace: true });
+  }
+}, [isAuthenticated, currentUser, navigate]);
+        </pre>
+        
+        <h3>8.9 ProviderDashboard.jsx</h3>
+        <p><strong>Location:</strong> <code>src/pages/ProviderDashboard.jsx</code></p>
+        <p><strong>Purpose:</strong> Provider portal for managing booking requests and business.</p>
+        
+        <h4>Layout:</h4>
+        <ul>
+            <li>ProviderSidebar on left</li>
+            <li>Main content area</li>
+        </ul>
+        
+        <h4>Stats Cards:</h4>
+        <ul>
+            <li>Total Bookings</li>
+            <li>Pending Requests (yellow)</li>
+            <li>Confirmed Bookings (green)</li>
+            <li>Total Earnings (calculated from completed bookings)</li>
+        </ul>
+        
+        <h4>Booking Requests Section:</h4>
+        <ul>
+            <li>Lists all bookings for this provider</li>
+            <li>Shows customer name, service, date, time, location</li>
+            <li>Displays customer notes if provided</li>
+            <li>Status badge</li>
+            <li>Accept/Decline buttons for pending requests</li>
+            <li>Empty state if no bookings</li>
+        </ul>
+        
+        <h4>Data Calculations:</h4>
+        <pre>
+myBookings = bookingsData.filter(b => b.providerId === currentUser.id)
+pendingBookings = myBookings.filter(b => b.status === 'pending')
+confirmedBookings = myBookings.filter(b => b.status === 'confirmed')
+completedBookings = myBookings.filter(b => b.status === 'completed')
+totalEarnings = completedBookings.reduce((sum, b) => sum + b.price, 0)
+        </pre>
+        
+        <h3>8.10 AdminDashboard.jsx</h3>
+        <p><strong>Location:</strong> <code>src/pages/AdminDashboard.jsx</code></p>
+        <p><strong>Purpose:</strong> Administrative overview of platform metrics and activity.</p>
+        
+        <h4>Layout:</h4>
+        <ul>
+            <li>AdminSidebar on left</li>
+            <li>Top header bar with title and action buttons</li>
+            <li>Main content with multiple sections</li>
+        </ul>
+        
+        <h4>Top Header:</h4>
+        <ul>
+            <li>Dashboard title and subtitle</li>
+            <li>Date filter button</li>
+            <li>Export Report button</li>
+        </ul>
+        
+        <h4>Stats Grid (4 cards):</h4>
+        <ul>
+            <li>Total Revenue (calculated from all bookings)</li>
+            <li>Total Bookings count</li>
+            <li>Active Providers count</li>
+            <li>Total Customers count</li>
+        </ul>
+        
+        <h4>Recent Activity Section:</h4>
+        
+        <p><strong>Recent Bookings Card:</strong></p>
+        <ul>
+            <li>Shows last 5 bookings</li>
+            <li>Service name, customer name, price, status</li>
+        </ul>
+        
+        <p><strong>Top Rated Providers Card:</strong></p>
+        <ul>
+            <li>Providers sorted by rating</li>
+            <li>Shows top 5</li>
+            <li>Provider photo, name, service, rating, review count</li>
+        </ul>
+        
+        <h4>Platform Insights Section:</h4>
+        <ul>
+            <li>Pending Approval count</li>
+            <li>Success Rate (96% demo value)</li>
+            <li>Average Rating (4.7 demo value)</li>
+        </ul>
+        
+        <h4>Data Aggregation:</h4>
+        <pre>
+totalBookings = bookingsData.length
+totalProviders = providersData.length
+totalCustomers = usersData.filter(u => u.role === 'customer').length
+totalRevenue = bookingsData.reduce((sum, b) => sum + b.price, 0)
+pendingBookings = bookingsData.filter(b => b.status === 'pending').length
+        </pre>
+        
+        <h3>8.11 Other Admin Pages</h3>
+        
+        <p><strong>AdminBookings.jsx</strong> - Comprehensive booking management with filtering, search, and status updates</p>
+        <p><strong>AdminProviders.jsx</strong> - Provider management, approval/rejection, profile viewing</p>
+        <p><strong>AdminCustomers.jsx</strong> - Customer list, account management, activity tracking</p>
+        <p><strong>AdminServices.jsx</strong> - Service catalog management, add/edit/remove services</p>
+        <p><strong>AdminAnalytics.jsx</strong> - Charts and graphs for business metrics</p>
+        <p><strong>AdminSettings.jsx</strong> - Platform configuration and settings</p>
+        
+        <h3>8.12 Informational Pages</h3>
+        
+        <p><strong>HowItWorks.jsx</strong> - Detailed explanation of platform usage</p>
+        <p><strong>About.jsx</strong> - Company information, mission, vision</p>
+        <p><strong>FAQ.jsx</strong> - Frequently asked questions with accordion-style answers</p>
+    </div>
+
+    <div id="data-models" class="section">
+        <h2>9. Data Models</h2>
+        
+        <h3>9.1 services.json</h3>
+        <p><strong>Location:</strong> <code>src/data/services.json</code></p>
+        <p><strong>Purpose:</strong> Define available service categories and their properties.</p>
+        
+        <h4>Schema:</h4>
+        <pre>
+{
+  "id": Number,
+  "name": String,
+  "category": String,
+  "icon": String (emoji),
+  "description": String,
+  "basePrice": Number,
+  "duration": String,
+  "popular": Boolean
+}
+        </pre>
+        
+        <h4>Example:</h4>
+        <pre>
+{
+  "id": 1,
+  "name": "House Cleaning",
+  "category": "Cleaning",
+  "icon": "🧹",
+  "description": "Professional home cleaning services",
+  "basePrice": 2500,
+  "duration": "2-3 hours",
+  "popular": true
+}
+        </pre>
+        
+        <h4>Categories:</h4>
+        <ul>
+            <li>Cleaning</li>
+            <li>Home Repair</li>
+            <li>Home Improvement</li>
+            <li>Outdoor</li>
+        </ul>
+        
+        <h3>9.2 providers.json</h3>
+        <p><strong>Location:</strong> <code>src/data/providers.json</code></p>
+        <p><strong>Purpose:</strong> Store service provider profiles and information.</p>
+        
+        <h4>Schema:</h4>
+        <pre>
+{
+  "id": Number,
+  "name": String,
+  "email": String,
+  "serviceId": Number,
+  "serviceName": String,
+  "image": String (URL),
+  "rating": Number (0-5),
+  "reviews": Number,
+  "price": Number,
+  "location": String,
+  "experience": Number (years),
+  "description": String,
+  "verified": Boolean,
+  "availability": Array of Strings,
+  "specializations": Array of Strings
+}
+        </pre>
+        
+        <h4>Example:</h4>
+        <pre>
+{
+  "id": 1,
+  "name": "Ahmed Khan",
+  "email": "ahmed.khan@example.com",
+  "serviceId": 2,
+  "serviceName": "Plumbing",
+  "image": "https://i.pravatar.cc/300?img=12",
+  "rating": 4.8,
+  "reviews": 156,
+  "price": 3500,
+  "location": "Karachi",
+  "experience": 8,
+  "description": "Expert plumber with 8 years of experience...",
+  "verified": true,
+  "availability": ["Mon", "Wed", "Fri", "Sat"],
+  "specializations": ["Pipe Repair", "Installation", "Emergency Services"]
+}
+        </pre>
+        
+        <h3>9.3 bookings.json</h3>
+        <p><strong>Location:</strong> <code>src/data/bookings.json</code></p>
+        <p><strong>Purpose:</strong> Track all booking transactions between customers and providers.</p>
+        
+        <h4>Schema:</h4>
+        <pre>
+{
+  "id": Number,
+  "customerId": Number,
+  "customerName": String,
+  "providerId": Number,
+  "providerName": String,
+  "serviceId": Number,
+  "serviceName": String,
+  "date": String (YYYY-MM-DD),
+  "time": String,
+  "address": String,
+  "price": Number,
+  "status": String (pending|confirmed|completed|cancelled),
+  "notes": String (optional)
+}
+        </pre>
+        
+        <h4>Status Values:</h4>
+        <ul>
+            <li><strong>pending:</strong> Booking submitted, awaiting provider confirmation</li>
+            <li><strong>confirmed:</strong> Provider accepted, service scheduled</li>
+            <li><strong>completed:</strong> Service finished successfully</li>
+            <li><strong>cancelled:</strong> Booking cancelled by customer or provider</li>
+        </ul>
+        
+        <h3>9.4 users.json</h3>
+        <p><strong>Location:</strong> <code>src/data/users.json</code></p>
+        <p><strong>Purpose:</strong> Store customer and admin user accounts.</p>
+        
+        <h4>Schema:</h4>
+        <pre>
+{
+  "id": Number,
+  "name": String,
+  "email": String,
+  "phone": String,
+  "role": String (customer|admin),
+  "avatar": String (URL),
+  "address": String,
+  "joinDate": String (YYYY-MM-DD)
+}
+        </pre>
+        
+        <h4>Role Types:</h4>
+        <ul>
+            <li><strong>customer:</strong> Regular users booking services</li>
+            <li><strong>admin:</strong> Platform administrators with full access</li>
+        </ul>
+        
+        <div class="note">
+            <strong>Note:</strong> Provider accounts are stored in providers.json with additional service-related fields. The role "provider" is dynamically assigned during authentication when matching against providers.json.
+        </div>
+    </div>
+
+    <div id="routing" class="section">
+        <h2>10. Routing Configuration</h2>
+        
+        <h3>10.1 Route Structure</h3>
+        <p>The application uses React Router DOM v7 with a declarative routing approach. All routes are defined in App.jsx within the Routes component.</p>
+        
+        <h3>10.2 Public Routes</h3>
+        <p>Accessible to all users without authentication:</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Route</th>
+                    <th>Component</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>/</td>
+                    <td>Home</td>
+                    <td>Landing page with hero and search</td>
+                </tr>
+                <tr>
+                    <td>/select-city</td>
+                    <td>CitySelection</td>
+                    <td>City picker before browsing</td>
+                </tr>
+                <tr>
+                    <td>/services</td>
+                    <td>Services</td>
+                    <td>Browse and filter providers</td>
+                </tr>
+                <tr>
+                    <td>/provider/:id</td>
+                    <td>ProviderProfile</td>
+                    <td>Individual provider details (dynamic route)</td>
+                </tr>
+                <tr>
+                    <td>/login</td>
+                    <td>Login</td>
+                    <td>Authentication page</td>
+                </tr>
+                <tr>
+                    <td>/signup</td>
+                    <td>Signup</td>
+                    <td>Customer registration</td>
+                </tr>
+                <tr>
+                    <td>/provider/signup</td>
+                    <td>ProviderSignup</td>
+                    <td>Provider registration (multi-step)</td>
+                </tr>
+                <tr>
+                    <td>/how-it-works</td>
+                    <td>HowItWorks</td>
+                    <td>Platform explanation</td>
+                </tr>
+                <tr>
+                    <td>/about</td>
+                    <td>About</td>
+                    <td>Company information</td>
+                </tr>
+                <tr>
+                    <td>/faq</td>
+                    <td>FAQ</td>
+                    <td>Frequently asked questions</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h3>10.3 Protected Routes</h3>
+        <p>Require authentication and implement redirect logic:</p>
+        
+        <h4>Customer Routes:</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Route</th>
+                    <th>Component</th>
+                    <th>Access</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>/customer/dashboard</td>
+                    <td>CustomerDashboard</td>
+                    <td>Customer role only</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h4>Provider Routes:</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Route</th>
+                    <th>Component</th>
+                    <th>Access</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>/provider/dashboard</td>
+                    <td>ProviderDashboard</td>
+                    <td>Provider role only</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h4>Admin Routes:</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Route</th>
+                    <th>Component</th>
+                    <th>Access</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>/admin</td>
+                    <td>Navigate to /admin/dashboard</td>
+                    <td>Admin role only</td>
+                </tr>
+                <tr>
+                    <td>/admin/dashboard</td>
+                    <td>AdminDashboard</td>
+                    <td>Admin role only</td>
+                </tr>
+                <tr>
+                    <td>/admin/bookings</td>
+                    <td>AdminBookings</td>
+                    <td>Admin role only</td>
+                </tr>
+                <tr>
+                    <td>/admin/providers</td>
+                    <td>AdminProviders</td>
+                    <td>Admin role only</td>
+                </tr>
+                <tr>
+                    <td>/admin/customers</td>
+                    <td>AdminCustomers</td>
+                    <td>Admin role only</td>
+                </tr>
+                <tr>
+                    <td>/admin/services</td>
+                    <td>AdminServices</td>
+                    <td>Admin role only</td>
+                </tr>
+                <tr>
+                    <td>/admin/analytics</td>
+                    <td>AdminAnalytics</td>
+                    <td>Admin role only</td>
+                </tr>
+                <tr>
+                    <td>/admin/settings</td>
+                    <td>AdminSettings</td>
+                    <td>Admin role only</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h3>10.4 Navigation Patterns</h3>
+        
+        <h4>Programmatic Navigation:</h4>
+        <p>Using the useNavigate hook:</p>
+        <pre>
+import { useNavigate } from 'react-router-dom';
+
+const MyComponent = () => {
+  const navigate = useNavigate();
+  
+  const handleClick = () => {
+    navigate('/services');
+  };
+};
+        </pre>
+        
+        <h4>Declarative Navigation:</h4>
+        <p>Using the Link component:</p>
+        <pre>
+import { Link } from 'react-router-dom';
+
+&lt;Link to="/services"&gt;Browse Services&lt;/Link&gt;
+        </pre>
+        
+        <h4>URL Parameters:</h4>
+        <p>Dynamic route segments and query parameters:</p>
+        <pre>
+// Dynamic segment
+&lt;Route path="/provider/:id" element={&lt;ProviderProfile /&gt;} /&gt;
+
+// Access in component
+import { useParams } from 'react-router-dom';
+const { id } = useParams();
+
+// Query parameters
+navigate('/services?city=Karachi&category=Cleaning');
+
+// Access in component
+import { useSearchParams } from 'react-router-dom';
+const [searchParams] = useSearchParams();
+const city = searchParams.get('city');
+        </pre>
+        
+        <h3>10.5 Route Protection Implementation</h3>
+        <p>Protected routes use useEffect to check authentication status:</p>
+        <pre>
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+
+const ProtectedPage = () => {
+  const { isAuthenticated, currentUser } = useAuth();
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    if (!isAuthenticated || !currentUser) {
+      navigate('/login', { replace: true });
+    }
+  }, [isAuthenticated, currentUser, navigate]);
+  
+  if (!currentUser) return null;
+  
+  // Component JSX
+};
+        </pre>
+    </div>
+
+    <div id="features" class="section">
+        <h2>11. Key Features</h2>
+        
+        <h3>11.1 Search and Discovery</h3>
+        
+        <h4>Intelligent Search Bar:</h4>
+        <ul>
+            <li>Autocomplete suggestions with service icons</li>
+            <li>Dynamic placeholder rotation every 3 seconds</li>
+            <li>Keyboard navigation (Arrow keys, Enter, Escape)</li>
+            <li>Category and service filtering</li>
+            <li>Search query persistence via sessionStorage</li>
+        </ul>
+        
+        <h4>City-Based Discovery:</h4>
+        <ul>
+            <li>Mandatory city selection before browsing</li>
+            <li>12 major Pakistani cities supported</li>
+            <li>City parameter in URL for shareability</li>
+            <li>Automatic redirect to city selection if not chosen</li>
+            <li>Change city option available on services page</li>
+        </ul>
+        
+        <h4>Advanced Filtering:</h4>
+        <ul>
+            <li>Multiple filter types (category, rating, price, location, search)</li>
+            <li>Real-time result updates</li>
+            <li>Filter state synchronized with URL</li>
+            <li>Clear all filters functionality</li>
+            <li>Results count display</li>
+        </ul>
+        
+        <h3>11.2 Booking System</h3>
+        
+        <h4>Comprehensive Booking Form:</h4>
+        <ul>
+            <li>Nine distinct sections covering all booking details</li>
+            <li>Provider summary with verification badge</li>
+            <li>Service requirement description</li>
+            <li>Date and time slot selection</li>
+            <li>Detailed location information (city, area, full address)</li>
+            <li>Customer contact details with auto-fill</li>
+            <li>Transparent price breakdown (base + 10% platform fee)</li>
+            <li>Optional additional notes field</li>
+            <li>Provider availability display</li>
+        </ul>
+        
+        <h4>Booking Flow:</h4>
+        <ol>
+            <li>User clicks Book Now on provider card or profile</li>
+            <li>Modal opens with provider information</li>
+            <li>User fills required fields (marked with asterisk)</li>
+            <li>Form validation ensures all required data present</li>
+            <li>Submit generates demo booking ID</li>
+            <li>Confirmation screen displays with booking summary</li>
+            <li>Options to close or navigate to dashboard</li>
+        </ol>
+        
+        <h4>Demo Mode Indicators:</h4>
+        <ul>
+            <li>Yellow banner notice at top of form</li>
+            <li>Demo booking ID format (DEMO-XXXXXXXXX)</li>
+            <li>Clear messaging that no real provider assigned</li>
+            <li>Blue info box on confirmation screen</li>
+        </ul>
+        
+        <h3>11.3 Multi-Step Provider Registration</h3>
+        
+        <h4>Step-by-Step Process:</h4>
+        <ul>
+            <li>Step 1: Basic personal information (name, email, phone, password)</li>
+            <li>Step 2: Service details (category, description, experience)</li>
+            <li>Step 3: Location and pricing (city, coverage, rates)</li>
+            <li>Step 4: Availability and profile (schedule, bio, languages)</li>
+        </ul>
+        
+        <h4>User Experience Features:</h4>
+        <ul>
+            <li>Progress indicator showing current step</li>
+            <li>Next/Previous navigation buttons</li>
+            <li>Field validation before allowing progression</li>
+            <li>Checkbox groups for days and time slots</li>
+            <li>Radio buttons for yes/no questions</li>
+            <li>Dropdown selects for predefined options</li>
+            <li>Large textareas for detailed descriptions</li>
+        </ul>
+        
+        <h3>11.4 Role-Based Dashboards</h3>
+        
+        <h4>Customer Dashboard:</h4>
+        <ul>
+            <li>Booking statistics (total, upcoming, completed)</li>
+            <li>Quick action buttons</li>
+            <li>Complete booking list with status badges</li>
+            <li>Empty state with browse services CTA</li>
+            <li>Sidebar navigation to all account features</li>
+        </ul>
+        
+        <h4>Provider Dashboard:</h4>
+        <ul>
+            <li>Business metrics (bookings, pending, confirmed, earnings)</li>
+            <li>Booking request management</li>
+            <li>Accept/Decline functionality</li>
+            <li>Customer details and special notes</li>
+            <li>Empty state messaging</li>
+        </ul>
+        
+        <h4>Admin Dashboard:</h4>
+        <ul>
+            <li>Platform-wide statistics (revenue, bookings, users)</li>
+            <li>Recent activity feed</li>
+            <li>Top-rated providers list</li>
+            <li>Platform insights (success rate, average rating)</li>
+            <li>Export functionality</li>
+            <li>Navigation to specialized admin pages</li>
+        </ul>
+        
+        <h3>11.5 Authentication System</h3>
+        
+        <h4>Features:</h4>
+        <ul>
+            <li>Role-based login (customer, provider, admin)</li>
+            <li>Visual role selector with icons</li>
+            <li>Password show/hide toggle</li>
+            <li>Demo account quick-fill buttons</li>
+            <li>Loading states during authentication</li>
+            <li>Error message display</li>
+            <li>LocalStorage persistence</li>
+            <li>Automatic role-based redirection</li>
+        </ul>
+        
+        <h4>Session Management:</h4>
+        <ul>
+            <li>User data stored in localStorage on login</li>
+            <li>Automatic session restoration on page load</li>
+            <li>Context API for global auth state access</li>
+            <li>Logout clears all stored data</li>
+        </ul>
+        
+        <h3>11.6 Responsive Design</h3>
+        
+        <h4>Breakpoints (Tailwind CSS):</h4>
+        <ul>
+            <li>sm: 640px</li>
+            <li>md: 768px</li>
+            <li>lg: 1024px</li>
+            <li>xl: 1280px</li>
+        </ul>
+        
+        <h4>Mobile-First Approach:</h4>
+        <ul>
+            <li>Single column layouts on mobile</li>
+            <li>Hamburger menu navigation</li>
+            <li>Touch-friendly button sizes</li>
+            <li>Optimized modal sizing</li>
+            <li>Responsive grid systems (1 col -> 2 col -> 3 col)</li>
+        </ul>
+        
+        <h4>Desktop Enhancements:</h4>
+        <ul>
+            <li>Multi-column layouts</li>
+            <li>Sticky sidebars for dashboards</li>
+            <li>Dropdown menus with hover states</li>
+            <li>Larger fonts and spacing</li>
+            <li>Fixed navigation bar</li>
+        </ul>
+    </div>
+
+    <div id="future" class="section">
+        <h2>12. Future Enhancements</h2>
+        
+        <h3>12.1 Backend Integration</h3>
+        
+        <h4>Required Backend Components:</h4>
+        <ul>
+            <li>RESTful API or GraphQL endpoint</li>
+            <li>Database (PostgreSQL, MongoDB, or MySQL)</li>
+            <li>Authentication service (JWT tokens, OAuth)</li>
+            <li>File storage system (AWS S3, Cloudinary)</li>
+            <li>Email service (SendGrid, Mailgun)</li>
+            <li>SMS service (Twilio, Nexmo)</li>
+        </ul>
+        
+        <h4>API Endpoints Needed:</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Endpoint</th>
+                    <th>Method</th>
+                    <th>Purpose</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>/api/auth/login</td>
+                    <td>POST</td>
+                    <td>User authentication</td>
+                </tr>
+                <tr>
+                    <td>/api/auth/signup</td>
+                    <td>POST</td>
+                    <td>User registration</td>
+                </tr>
+                <tr>
+                    <td>/api/auth/logout</td>
+                    <td>POST</td>
+                    <td>Session termination</td>
+                </tr>
+                <tr>
+                    <td>/api/services</td>
+                    <td>GET</td>
+                    <td>Fetch all services</td>
+                </tr>
+                <tr>
+                    <td>/api/providers</td>
+                    <td>GET</td>
+                    <td>Fetch providers with filters</td>
+                </tr>
+                <tr>
+                    <td>/api/providers/:id</td>
+                    <td>GET</td>
+                    <td>Fetch single provider</td>
+                </tr>
+                <tr>
+                    <td>/api/bookings</td>
+                    <td>POST</td>
+                    <td>Create new booking</td>
+                </tr>
+                <tr>
+                    <td>/api/bookings/:id</td>
+                    <td>GET/PUT</td>
+                    <td>Fetch or update booking</td>
+                </tr>
+                <tr>
+                    <td>/api/users/:id</td>
+                    <td>GET/PUT</td>
+                    <td>Fetch or update user profile</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h3>12.2 Payment Integration</h3>
+        <ul>
+            <li>Payment gateway integration (Stripe, Razorpay, PayPal)</li>
+            <li>Secure payment processing</li>
+            <li>Multiple payment methods (cards, digital wallets)</li>
+            <li>Payment history and invoicing</li>
+            <li>Refund management</li>
+            <li>Escrow system for service completion</li>
+        </ul>
+        
+        <h3>12.3 Real-Time Features</h3>
+        <ul>
+            <li>WebSocket connection for live updates</li>
+            <li>Real-time booking notifications</li>
+            <li>In-app messaging between customer and provider</li>
+            <li>Live location tracking during service</li>
+            <li>Push notifications (web and mobile)</li>
+            <li>Real-time availability updates</li>
+        </ul>
+        
+        <h3>12.4 File Upload Functionality</h3>
+        <ul>
+            <li>Provider profile photos</li>
+            <li>Government ID verification documents</li>
+            <li>Professional certifications</li>
+            <li>Portfolio/work sample images</li>
+            <li>Customer job photos for better estimates</li>
+            <li>Before/after service photos</li>
+        </ul>
+        
+        <h3>12.5 Advanced Search Features</h3>
+        <ul>
+            <li>Elasticsearch or Algolia integration</li>
+            <li>Fuzzy search for typo tolerance</li>
+            <li>Search suggestions based on popularity</li>
+            <li>Recent searches history</li>
+            <li>Saved favorite providers</li>
+            <li>Custom filter combinations saving</li>
+        </ul>
+        
+        <h3>12.6 Reviews and Ratings</h3>
+        <ul>
+            <li>Star rating system (1-5)</li>
+            <li>Written review submission</li>
+            <li>Photo uploads with reviews</li>
+            <li>Review moderation system</li>
+            <li>Verified booking badge on reviews</li>
+            <li>Provider response to reviews</li>
+            <li>Review helpfulness voting</li>
+        </ul>
+        
+        <h3>12.7 Analytics and Reporting</h3>
+        <ul>
+            <li>Google Analytics integration</li>
+            <li>Custom event tracking</li>
+            <li>User behavior analysis</li>
+            <li>Conversion funnel optimization</li>
+            <li>A/B testing framework</li>
+            <li>Revenue and booking trend charts</li>
+            <li>Provider performance metrics</li>
+        </ul>
+        
+        <h3>12.8 Mobile Application</h3>
+        <ul>
+            <li>React Native app development</li>
+            <li>Native iOS and Android support</li>
+            <li>Push notification system</li>
+            <li>Geolocation services</li>
+            <li>Camera integration for photo uploads</li>
+            <li>Offline mode capabilities</li>
+        </ul>
+        
+        <h3>12.9 Additional Features</h3>
+        <ul>
+            <li>Multi-language support (i18n)</li>
+            <li>Dark mode theme</li>
+            <li>Social media sharing</li>
+            <li>Referral program</li>
+            <li>Loyalty points system</li>
+            <li>Subscription plans for premium features</li>
+            <li>Automated invoice generation</li>
+            <li>Service scheduling calendar</li>
+            <li>Recurring bookings setup</li>
+            <li>Emergency service fast-track</li>
+        </ul>
+        
+        <h3>12.10 Performance Optimizations</h3>
+        <ul>
+            <li>Code splitting for faster initial load</li>
+            <li>Lazy loading of images and components</li>
+            <li>Progressive Web App (PWA) implementation</li>
+            <li>Service Worker for offline caching</li>
+            <li>Image optimization and WebP format</li>
+            <li>CDN for static asset delivery</li>
+            <li>Database query optimization</li>
+            <li>Redis caching layer</li>
+        </ul>
+    </div>
+
+    <div id="configuration-files" class="section">
+        <h2>13. Configuration Files Deep Dive</h2>
+        <p>This section provides detailed explanations of all project configuration files, their purpose, structure, and how they work together to configure the development and build environment.</p>
+        
+        <h3>13.1 package.json</h3>
+        <p><strong>Location:</strong> <code>a:\homeease\homeease-frontend\package.json</code></p>
+        <p><strong>Purpose:</strong> The package.json file is the heart of any Node.js project. It defines project metadata, manages dependencies, and contains scripts for common development tasks.</p>
+        
+        <h4>File Structure and Components:</h4>
+        
+        <p><strong>Project Metadata:</strong></p>
+        <pre>
+{
+  "name": "homeease-frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module"
+}
+        </pre>
+        <ul>
+            <li><strong>name:</strong> Project identifier used by npm and in package registries</li>
+            <li><strong>private:</strong> Set to true to prevent accidental publication to npm registry</li>
+            <li><strong>version:</strong> Current version following semantic versioning (major.minor.patch)</li>
+            <li><strong>type:</strong> Set to "module" to enable ES6 module syntax (import/export) in Node.js</li>
+        </ul>
+        
+        <p><strong>Scripts Section:</strong></p>
+        <pre>
+"scripts": {
+  "dev": "vite",
+  "build": "vite build",
+  "lint": "eslint .",
+  "preview": "vite preview"
+}
+        </pre>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Script</th>
+                    <th>Command</th>
+                    <th>Description</th>
+                    <th>Usage</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>dev</td>
+                    <td>vite</td>
+                    <td>Starts Vite development server with hot module replacement</td>
+                    <td>npm run dev</td>
+                </tr>
+                <tr>
+                    <td>build</td>
+                    <td>vite build</td>
+                    <td>Creates optimized production build in dist/ directory</td>
+                    <td>npm run build</td>
+                </tr>
+                <tr>
+                    <td>lint</td>
+                    <td>eslint .</td>
+                    <td>Runs ESLint to check code quality and style issues</td>
+                    <td>npm run lint</td>
+                </tr>
+                <tr>
+                    <td>preview</td>
+                    <td>vite preview</td>
+                    <td>Previews production build locally before deployment</td>
+                    <td>npm run preview</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <p><strong>Dependencies (Production):</strong></p>
+        <p>Packages required for the application to run in production:</p>
+        <pre>
+"dependencies": {
+  "lucide-react": "^0.561.0",
+  "react": "^19.2.0",
+  "react-dom": "^19.2.0",
+  "react-router-dom": "^7.10.1"
+}
+        </pre>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Package</th>
+                    <th>Version</th>
+                    <th>Purpose</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>lucide-react</td>
+                    <td>^0.561.0</td>
+                    <td>Icon library providing customizable SVG icons as React components</td>
+                </tr>
+                <tr>
+                    <td>react</td>
+                    <td>^19.2.0</td>
+                    <td>Core React library for building component-based user interfaces</td>
+                </tr>
+                <tr>
+                    <td>react-dom</td>
+                    <td>^19.2.0</td>
+                    <td>React package for DOM manipulation and rendering in browsers</td>
+                </tr>
+                <tr>
+                    <td>react-router-dom</td>
+                    <td>^7.10.1</td>
+                    <td>Declarative routing library for single-page applications</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <p><strong>DevDependencies (Development Only):</strong></p>
+        <p>Packages used only during development and build process:</p>
+        <pre>
+"devDependencies": {
+  "@eslint/js": "^9.39.1",
+  "@tailwindcss/postcss": "^4.1.18",
+  "@types/react": "^19.2.5",
+  "@types/react-dom": "^19.2.3",
+  "@vitejs/plugin-react": "^5.1.1",
+  "autoprefixer": "^10.4.22",
+  "eslint": "^9.39.1",
+  "eslint-plugin-react-hooks": "^7.0.1",
+  "eslint-plugin-react-refresh": "^0.4.24",
+  "globals": "^16.5.0",
+  "postcss": "^8.5.6",
+  "tailwindcss": "^4.1.18",
+  "vite": "npm:rolldown-vite@7.2.5"
+}
+        </pre>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Package</th>
+                    <th>Category</th>
+                    <th>Purpose</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>eslint + plugins</td>
+                    <td>Code Quality</td>
+                    <td>Linting tools to enforce code standards and catch errors</td>
+                </tr>
+                <tr>
+                    <td>tailwindcss</td>
+                    <td>CSS Framework</td>
+                    <td>Utility-first CSS framework for rapid UI development</td>
+                </tr>
+                <tr>
+                    <td>postcss + autoprefixer</td>
+                    <td>CSS Processing</td>
+                    <td>Transform and optimize CSS, add vendor prefixes automatically</td>
+                </tr>
+                <tr>
+                    <td>vite + plugin-react</td>
+                    <td>Build Tool</td>
+                    <td>Fast development server and optimized production bundler</td>
+                </tr>
+                <tr>
+                    <td>@types packages</td>
+                    <td>TypeScript Definitions</td>
+                    <td>Type definitions for better IDE autocomplete and error checking</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <p><strong>Package Overrides:</strong></p>
+        <pre>
+"overrides": {
+  "vite": "npm:rolldown-vite@7.2.5"
+}
+        </pre>
+        <p>Forces npm to use the rolldown-vite variant instead of standard Vite. Rolldown is a high-performance bundler written in Rust, providing faster build times.</p>
+        
+        <div class="note">
+            <h4>Version Prefixes Explained:</h4>
+            <ul>
+                <li><strong>^</strong> (caret): Allows updates that do not change the leftmost non-zero digit (e.g., ^19.2.0 allows 19.2.1, 19.3.0 but not 20.0.0)</li>
+                <li><strong>~</strong> (tilde): Allows patch-level updates only (e.g., ~19.2.0 allows 19.2.1 but not 19.3.0)</li>
+                <li><strong>No prefix:</strong> Exact version only</li>
+            </ul>
+        </div>
+        
+        <h3>13.2 package-lock.json</h3>
+        <p><strong>Location:</strong> <code>a:\homeease\homeease-frontend\package-lock.json</code></p>
+        <p><strong>Purpose:</strong> Automatically generated file that locks down the exact versions of all dependencies and their sub-dependencies.</p>
+        
+        <h4>Why This File Exists:</h4>
+        <ul>
+            <li><strong>Reproducible Builds:</strong> Ensures all team members and CI/CD systems install identical dependency versions</li>
+            <li><strong>Dependency Resolution:</strong> Records the complete dependency tree, including nested dependencies</li>
+            <li><strong>Faster Installs:</strong> npm uses this file to skip version resolution, speeding up installation</li>
+            <li><strong>Security:</strong> Includes integrity hashes (SHA-512) to verify package authenticity</li>
+        </ul>
+        
+        <h4>Key Characteristics:</h4>
+        <ul>
+            <li>Should be committed to version control (Git)</li>
+            <li>Automatically updated when you run npm install or npm update</li>
+            <li>Contains exact versions (no ^ or ~ prefixes)</li>
+            <li>Much larger than package.json due to nested dependencies</li>
+            <li>Should not be manually edited</li>
+        </ul>
+        
+        <div class="note">
+            <p><strong>Important:</strong> If you delete package-lock.json and run npm install, you may get different dependency versions than other developers, potentially causing "works on my machine" issues.</p>
+        </div>
+        
+        <h3>13.3 vite.config.js</h3>
+        <p><strong>Location:</strong> <code>a:\homeease\homeease-frontend\vite.config.js</code></p>
+        <p><strong>Purpose:</strong> Configures Vite build tool behavior for development server and production builds.</p>
+        
+        <h4>Standard Configuration:</h4>
+        <pre>
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+export default defineConfig({
+  plugins: [react()],
+})
+        </pre>
+        
+        <h4>Configuration Breakdown:</h4>
+        
+        <p><strong>defineConfig Function:</strong></p>
+        <ul>
+            <li>Provides TypeScript type checking and IntelliSense in IDE</li>
+            <li>Returns configuration object for Vite</li>
+            <li>Enables autocomplete for configuration options</li>
+        </ul>
+        
+        <p><strong>Plugins Array:</strong></p>
+        <ul>
+            <li><strong>react():</strong> Official Vite plugin for React support</li>
+            <li>Enables Fast Refresh (HMR for React components)</li>
+            <li>Handles JSX transformation</li>
+            <li>Optimizes React import statements</li>
+        </ul>
+        
+        <h4>Common Additional Configurations:</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Option</th>
+                    <th>Purpose</th>
+                    <th>Example</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>server.port</td>
+                    <td>Change development server port</td>
+                    <td>server: { port: 3000 }</td>
+                </tr>
+                <tr>
+                    <td>base</td>
+                    <td>Set base public path</td>
+                    <td>base: '/my-app/'</td>
+                </tr>
+                <tr>
+                    <td>build.outDir</td>
+                    <td>Change output directory</td>
+                    <td>build: { outDir: 'build' }</td>
+                </tr>
+                <tr>
+                    <td>resolve.alias</td>
+                    <td>Create import shortcuts</td>
+                    <td>resolve: { alias: { '@': '/src' } }</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h4>How Vite Works:</h4>
+        <ul>
+            <li><strong>Development:</strong> Serves source files as native ES modules (no bundling), instant server start</li>
+            <li><strong>Hot Module Replacement:</strong> Updates modules in browser without full reload</li>
+            <li><strong>Production:</strong> Uses Rollup to create optimized, minified bundles</li>
+            <li><strong>Code Splitting:</strong> Automatically splits code by routes for faster loading</li>
+        </ul>
+        
+        <h3>13.4 tailwind.config.js</h3>
+        <p><strong>Location:</strong> <code>a:\homeease\homeease-frontend\tailwind.config.js</code></p>
+        <p><strong>Purpose:</strong> Customizes Tailwind CSS framework with project-specific design tokens and configuration.</p>
+        
+        <h4>Configuration Structure:</h4>
+        <pre>
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        primary: {
+          50: '#f0f9ff',
+          100: '#e0f2fe',
+          200: '#bae6fd',
+          300: '#7dd3fc',
+          400: '#38bdf8',
+          500: '#0ea5e9',
+          600: '#0284c7',
+          700: '#0369a1',
+          800: '#075985',
+          900: '#0c4a6e',
+        },
+        secondary: {
+          50: '#fdf4ff',
+          100: '#fae8ff',
+          200: '#f5d0fe',
+          300: '#f0abfc',
+          400: '#e879f9',
+          500: '#d946ef',
+          600: '#c026d3',
+          700: '#a21caf',
+          800: '#86198f',
+          900: '#701a75',
+        },
+      },
+    },
+  },
+  plugins: [],
+}
+        </pre>
+        
+        <h4>Configuration Sections:</h4>
+        
+        <p><strong>1. Content Array:</strong></p>
+        <p>Tells Tailwind which files to scan for class names to include in final CSS:</p>
+        <ul>
+            <li><code>"./index.html"</code> - Main HTML template</li>
+            <li><code>"./src/**/*.{js,ts,jsx,tsx}"</code> - All JavaScript/TypeScript/JSX/TSX files in src directory and subdirectories</li>
+            <li>Only classes found in these files are included in production build (tree-shaking)</li>
+        </ul>
+        
+        <p><strong>2. Theme Object:</strong></p>
+        <p>Customizes Tailwind's default design system:</p>
+        <ul>
+            <li><strong>extend:</strong> Adds custom values while keeping Tailwind defaults</li>
+            <li><strong>colors:</strong> Custom color palette for the brand</li>
+            <li>Each color has shades from 50 (lightest) to 900 (darkest)</li>
+        </ul>
+        
+        <h4>Custom Color Usage:</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>CSS Class</th>
+                    <th>Effect</th>
+                    <th>Use Case</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>bg-primary-500</td>
+                    <td>Background color: #0ea5e9</td>
+                    <td>Primary buttons, highlights</td>
+                </tr>
+                <tr>
+                    <td>text-primary-600</td>
+                    <td>Text color: #0284c7</td>
+                    <td>Links, headings</td>
+                </tr>
+                <tr>
+                    <td>border-secondary-400</td>
+                    <td>Border color: #e879f9</td>
+                    <td>Decorative borders</td>
+                </tr>
+                <tr>
+                    <td>hover:bg-primary-700</td>
+                    <td>Hover background: #0369a1</td>
+                    <td>Interactive elements</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <p><strong>3. Plugins Array:</strong></p>
+        <p>Currently empty. Can include official or third-party Tailwind plugins:</p>
+        <ul>
+            <li>@tailwindcss/forms - Better form styling</li>
+            <li>@tailwindcss/typography - Prose content styling</li>
+            <li>@tailwindcss/aspect-ratio - Aspect ratio utilities</li>
+        </ul>
+        
+        <h4>How Tailwind CSS Works:</h4>
+        <ol>
+            <li>Scans content files for class names</li>
+            <li>Generates only CSS for classes actually used</li>
+            <li>Results in minimal CSS file size (typically under 10KB)</li>
+            <li>JIT (Just-In-Time) mode generates classes on-demand during development</li>
+        </ol>
+        
+        <h3>13.5 postcss.config.js</h3>
+        <p><strong>Location:</strong> <code>a:\homeease\homeease-frontend\postcss.config.js</code></p>
+        <p><strong>Purpose:</strong> Configures PostCSS, a tool that transforms CSS with JavaScript plugins.</p>
+        
+        <h4>Configuration:</h4>
+        <pre>
+export default {
+  plugins: {
+    '@tailwindcss/postcss': {},
+    autoprefixer: {},
+  },
+}
+        </pre>
+        
+        <h4>Plugin Breakdown:</h4>
+        
+        <p><strong>1. @tailwindcss/postcss:</strong></p>
+        <ul>
+            <li>PostCSS plugin for Tailwind CSS v4+</li>
+            <li>Processes Tailwind directives (@tailwind, @apply, etc.)</li>
+            <li>Generates utility classes based on configuration</li>
+            <li>Performs tree-shaking to remove unused CSS</li>
+        </ul>
+        
+        <p><strong>2. autoprefixer:</strong></p>
+        <ul>
+            <li>Automatically adds vendor prefixes to CSS</li>
+            <li>Uses data from caniuse.com to determine which prefixes are needed</li>
+            <li>Ensures cross-browser compatibility</li>
+        </ul>
+        
+        <h4>Autoprefixer Example:</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Your CSS</th>
+                    <th>Output CSS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <pre>display: flex;</pre>
+                    </td>
+                    <td>
+                        <pre>display: -webkit-box;
+display: -ms-flexbox;
+display: flex;</pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <pre>transform: rotate(45deg);</pre>
+                    </td>
+                    <td>
+                        <pre>-webkit-transform: rotate(45deg);
+transform: rotate(45deg);</pre>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h4>Processing Pipeline:</h4>
+        <ol>
+            <li>CSS source files are read</li>
+            <li>Tailwind plugin processes @tailwind directives</li>
+            <li>Autoprefixer adds vendor prefixes</li>
+            <li>Final CSS is output for browser consumption</li>
+        </ol>
+        
+        <h3>13.6 eslint.config.js</h3>
+        <p><strong>Location:</strong> <code>a:\homeease\homeease-frontend\eslint.config.js</code></p>
+        <p><strong>Purpose:</strong> Configures ESLint to enforce code quality standards and catch potential bugs.</p>
+        
+        <h4>Standard Configuration:</h4>
+        <pre>
+import js from '@eslint/js'
+import globals from 'globals'
+import react from 'eslint-plugin-react'
+import reactHooks from 'eslint-plugin-react-hooks'
+import reactRefresh from 'eslint-plugin-react-refresh'
+
+export default [
+  { ignores: ['dist'] },
+  {
+    files: ['**/*.{js,jsx}'],
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: globals.browser,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        ecmaFeatures: { jsx: true },
+        sourceType: 'module',
+      },
+    },
+    settings: { react: { version: '18.3' } },
+    plugins: {
+      react,
+      'react-hooks': reactHooks,
+      'react-refresh': reactRefresh,
+    },
+    rules: {
+      ...js.configs.recommended.rules,
+      ...react.configs.recommended.rules,
+      ...react.configs['jsx-runtime'].rules,
+      ...reactHooks.configs.recommended.rules,
+      'react/jsx-no-target-blank': 'off',
+      'react-refresh/only-export-components': [
+        'warn',
+        { allowConstantExport: true },
+      ],
+    },
+  },
+]
+        </pre>
+        
+        <h4>Configuration Breakdown:</h4>
+        
+        <p><strong>Ignore Patterns:</strong></p>
+        <ul>
+            <li><code>ignores: ['dist']</code> - Excludes build output directory from linting</li>
+        </ul>
+        
+        <p><strong>File Patterns:</strong></p>
+        <ul>
+            <li><code>files: ['**/*.{js,jsx}']</code> - Applies rules to all JavaScript and JSX files</li>
+        </ul>
+        
+        <p><strong>Language Options:</strong></p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Option</th>
+                    <th>Value</th>
+                    <th>Purpose</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>ecmaVersion</td>
+                    <td>2020</td>
+                    <td>Enables ES2020 syntax features</td>
+                </tr>
+                <tr>
+                    <td>globals</td>
+                    <td>globals.browser</td>
+                    <td>Recognizes browser globals (window, document, etc.)</td>
+                </tr>
+                <tr>
+                    <td>ecmaFeatures.jsx</td>
+                    <td>true</td>
+                    <td>Enables JSX syntax parsing</td>
+                </tr>
+                <tr>
+                    <td>sourceType</td>
+                    <td>module</td>
+                    <td>Uses ES6 module syntax (import/export)</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <p><strong>Plugins:</strong></p>
+        <ul>
+            <li><strong>react:</strong> React-specific linting rules</li>
+            <li><strong>react-hooks:</strong> Enforces Rules of Hooks</li>
+            <li><strong>react-refresh:</strong> Ensures components work with Fast Refresh</li>
+        </ul>
+        
+        <p><strong>Rules:</strong></p>
+        <ul>
+            <li>Inherits recommended rules from JavaScript, React, and React Hooks</li>
+            <li>Turns off target="_blank" warnings (less relevant in modern browsers)</li>
+            <li>Warns when non-component exports exist in component files</li>
+        </ul>
+        
+        <h4>Common ESLint Rules Enforced:</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Rule</th>
+                    <th>Prevents</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>no-unused-vars</td>
+                    <td>Declaring variables that are never used</td>
+                </tr>
+                <tr>
+                    <td>no-undef</td>
+                    <td>Using undefined variables</td>
+                </tr>
+                <tr>
+                    <td>react/prop-types</td>
+                    <td>Missing prop type definitions</td>
+                </tr>
+                <tr>
+                    <td>react-hooks/rules-of-hooks</td>
+                    <td>Violating React Hooks rules</td>
+                </tr>
+                <tr>
+                    <td>react-hooks/exhaustive-deps</td>
+                    <td>Missing dependencies in useEffect</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h3>13.7 index.html</h3>
+        <p><strong>Location:</strong> <code>a:\homeease\homeease-frontend\index.html</code></p>
+        <p><strong>Purpose:</strong> The HTML template that serves as the entry point for the single-page application.</p>
+        
+        <h4>Standard Structure:</h4>
+        <pre>
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+  &lt;head&gt;
+    &lt;meta charset="UTF-8" /&gt;
+    &lt;link rel="icon" type="image/png" href="/HomEase icon.png" /&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
+    &lt;title&gt;HomEase - Home Services Marketplace&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div id="root"&gt;&lt;/div&gt;
+    &lt;script type="module" src="/src/main.jsx"&gt;&lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+        </pre>
+        
+        <h4>Element Breakdown:</h4>
+        
+        <p><strong>HTML Head Section:</strong></p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Element</th>
+                    <th>Purpose</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>&lt;meta charset="UTF-8" /&gt;</td>
+                    <td>Sets character encoding to UTF-8 for proper text rendering</td>
+                </tr>
+                <tr>
+                    <td>&lt;link rel="icon" ... /&gt;</td>
+                    <td>Sets favicon (icon displayed in browser tab)</td>
+                </tr>
+                <tr>
+                    <td>&lt;meta name="viewport" ... /&gt;</td>
+                    <td>Ensures responsive design on mobile devices</td>
+                </tr>
+                <tr>
+                    <td>&lt;title&gt;</td>
+                    <td>Page title shown in browser tab and search results</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <p><strong>Body Section:</strong></p>
+        <ul>
+            <li><strong>&lt;div id="root"&gt;&lt;/div&gt;:</strong> Mount point where React application is rendered</li>
+            <li>React will replace this empty div with the entire application</li>
+            <li>The id "root" is referenced in main.jsx: <code>document.getElementById('root')</code></li>
+        </ul>
+        
+        <p><strong>Script Tag:</strong></p>
+        <ul>
+            <li><strong>type="module":</strong> Indicates this is an ES6 module (supports import/export)</li>
+            <li><strong>src="/src/main.jsx":</strong> Loads the JavaScript entry point</li>
+            <li>Vite processes this during development and build</li>
+        </ul>
+        
+        <h4>Development vs Production:</h4>
+        <ul>
+            <li><strong>Development:</strong> Vite serves this file directly, injecting HMR client</li>
+            <li><strong>Production:</strong> Vite transforms this into optimized HTML with hashed asset references</li>
+        </ul>
+        
+        <h4>Viewport Meta Tag Explained:</h4>
+        <pre>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;</pre>
+        <ul>
+            <li><strong>width=device-width:</strong> Sets viewport width to device screen width</li>
+            <li><strong>initial-scale=1.0:</strong> Sets initial zoom level (1 = 100%)</li>
+            <li>Critical for responsive design on mobile devices</li>
+            <li>Without this, mobile browsers assume desktop layout and zoom out</li>
+        </ul>
+        
+        <div class="note">
+            <h4>Single-Page Application (SPA) Behavior:</h4>
+            <p>This HTML file is loaded only once. After initial load:</p>
+            <ul>
+                <li>React Router handles all navigation client-side</li>
+                <li>URL changes without full page reloads</li>
+                <li>Only the content inside the root div updates</li>
+                <li>Provides faster, more app-like user experience</li>
+            </ul>
+        </div>
+        
+        <h3>13.8 Configuration Files Integration</h3>
+        <p>Understanding how these configuration files work together in the development workflow:</p>
+        
+        <h4>Development Workflow:</h4>
+        <pre>
+1. npm run dev
+   └──> Executes "vite" command from package.json
+       └──> Vite reads vite.config.js
+           ├──> Loads React plugin for JSX support
+           ├──> Serves index.html
+           │   └──> Loads /src/main.jsx
+           ├──> Processes CSS through PostCSS
+           │   ├──> Reads postcss.config.js
+           │   ├──> Runs Tailwind plugin (reads tailwind.config.js)
+           │   └──> Runs Autoprefixer
+           └──> Starts dev server with HMR
+        </pre>
+        
+        <h4>Build Workflow:</h4>
+        <pre>
+1. npm run build
+   └──> Executes "vite build" from package.json
+       └──> Vite production build
+           ├──> Bundles all JavaScript with Rollup
+           ├──> Processes CSS (Tailwind + Autoprefixer)
+           ├──> Minifies and optimizes assets
+           ├──> Generates hashed filenames for caching
+           └──> Outputs to dist/ directory
+        </pre>
+        
+        <h4>Linting Workflow:</h4>
+        <pre>
+1. npm run lint
+   └──> Executes "eslint ." from package.json
+       └──> ESLint reads eslint.config.js
+           ├──> Scans all .js and .jsx files
+           ├──> Applies configured rules
+           └──> Reports errors and warnings
+        </pre>
+        
+        <h4>Dependency Installation:</h4>
+        <pre>
+1. npm install
+   ├──> Reads package.json for dependencies
+   ├──> Checks package-lock.json for exact versions
+   ├──> Downloads packages from npm registry
+   └──> Installs to node_modules/
+        </pre>
+        
+        <div class="note">
+            <h4>Best Practices:</h4>
+            <ul>
+                <li>Never manually edit package-lock.json</li>
+                <li>Commit all configuration files to version control</li>
+                <li>Run npm run lint before committing code</li>
+                <li>Keep dependencies updated regularly for security patches</li>
+                <li>Use exact versions for critical dependencies in production</li>
+                <li>Document any custom configuration changes</li>
+            </ul>
+        </div>
+    </div>
+
+    <footer style="margin-top: 60px; padding-top: 20px; border-top: 2px solid #000; text-align: center;">
+        <p><strong>HomEase Frontend Application</strong></p>
+        <p>Developer Documentation - Version 1.0</p>
+        <p>Last Updated: December 2025</p>
+        <p style="margin-top: 20px; font-size: 0.9em; color: #666;">This documentation provides a comprehensive overview of the HomEase frontend application architecture, components, and implementation details for developers.</p>
+    </footer>
+
+</body>
+</html>
+        

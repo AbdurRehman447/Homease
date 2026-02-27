@@ -1,0 +1,62 @@
+[
+  {
+    "id": 101,
+    "name": "Umar Farooq",
+    "email": "umar.farooq@example.com",
+    "phone": "+92 321 1234567",
+    "role": "customer",
+    "address": "Block 15, Gulshan-e-Iqbal, Karachi",
+    "joinDate": "2024-06-15",
+    "avatar": "https://i.pravatar.cc/300?img=1"
+  },
+  {
+    "id": 102,
+    "name": "Fahad Noor",
+    "email": "fahad.noor@example.com",
+    "phone": "+92 322 2345678",
+    "role": "customer",
+    "address": "DHA Phase 5, Lahore",
+    "joinDate": "2024-08-20",
+    "avatar": "https://i.pravatar.cc/300?img=11"
+  },
+  {
+    "id": 103,
+    "name": "Hamza Shah",
+    "email": "hamza.shah@example.com",
+    "phone": "+92 323 3456789",
+    "role": "customer",
+    "address": "F-10 Markaz, Islamabad",
+    "joinDate": "2024-09-10",
+    "avatar": "https://i.pravatar.cc/300?img=3"
+  },
+  {
+    "id": 104,
+    "name": "Faisal Khan",
+    "email": "faisal.khan@example.com",
+    "phone": "+92 324 4567890",
+    "role": "customer",
+    "address": "Bahria Town, Rawalpindi",
+    "joinDate": "2024-10-05",
+    "avatar": "https://i.pravatar.cc/300?img=12"
+  },
+  {
+    "id": 105,
+    "name": "Saad Ahmed",
+    "email": "saad.ahmed@example.com",
+    "phone": "+92 325 5678901",
+    "role": "customer",
+    "address": "Cavalry Ground, Lahore",
+    "joinDate": "2024-11-12",
+    "avatar": "https://i.pravatar.cc/300?img=5"
+  },
+  {
+    "id": 1001,
+    "name": "Admin User",
+    "email": "admin@homeease.com",
+    "phone": "+92 300 9999999",
+    "role": "admin",
+    "address": "HomEase HQ, Karachi",
+    "joinDate": "2024-01-01",
+    "avatar": "https://i.pravatar.cc/300?img=70"
+  }
+]
