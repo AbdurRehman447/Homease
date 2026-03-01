@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import CustomerSidebar from '../components/CustomerSidebar';
-import { authAPI } from '../services/api';
 
 const CustomerProfile = () => {
   const { currentUser, isAuthenticated, setCurrentUser } = useAuth();

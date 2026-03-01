@@ -1,16 +1,20 @@
 import Joi from 'joi';
 
-// Create booking validation
+// Create booking validation (date "today or future" is enforced in controller)
 export const createBookingSchema = Joi.object({
   providerId: Joi.string().uuid().required(),
   serviceId: Joi.string().uuid().required(),
-  date: Joi.date().greater('now').required().messages({
-    'date.greater': 'Booking date must be in the future',
+  date: Joi.date().required().messages({
+    'date.base': 'Please select a valid date',
   }),
   timeSlot: Joi.string().required(),
   address: Joi.string().required(),
   area: Joi.string().required(),
   city: Joi.string().required(),
+  coordinates: Joi.object({
+    lat: Joi.number().required(),
+    lng: Joi.number().required(),
+  }).optional(),
   notes: Joi.string().max(500).optional(),
   jobDescription: Joi.string().max(1000).optional(),
 });

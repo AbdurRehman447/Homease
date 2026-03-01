@@ -34,6 +34,7 @@ enum PaymentStatus {
   COMPLETED
   FAILED
   REFUNDED
+  ON_HOLD     // For Bank Transfers pending manual verification
 }
 
 // Enum for provider status
@@ -68,6 +69,7 @@ model User {
   bookings      Booking[]
   reviews       Review[]
   notifications Notification[]
+  conversations Conversation[]
 
   @@map("users")
 }
@@ -109,6 +111,7 @@ model Provider {
   bookings      Booking[]
   reviews       Review[]
   notifications Notification[]
+  conversations Conversation[]
 
   @@map("providers")
 }
@@ -157,7 +160,7 @@ model ProviderService {
 model Booking {
   id              String        @id @default(uuid())
   bookingNumber   String        @unique // e.g., "BOOK-12345"
-  customerId      String
+  customerId      String?
   providerId      String
   serviceId       String
   serviceName     String        // Denormalized for easier queries
@@ -179,11 +182,12 @@ model Booking {
   updatedAt       DateTime      @updatedAt
 
   // Relations
-  customer        User          @relation(fields: [customerId], references: [id])
+  customer        User?         @relation(fields: [customerId], references: [id])
   provider        Provider      @relation(fields: [providerId], references: [id])
   service         Service       @relation(fields: [serviceId], references: [id])
   payment         Payment?
   review          Review?
+  conversation    Conversation?
 
   @@map("bookings")
 }
@@ -192,13 +196,14 @@ model Booking {
 model Payment {
   id              String        @id @default(uuid())
   bookingId       String        @unique
+  methodId        String?       // Reference to PaymentMethod
   amount          Float
   platformFee     Float
   providerAmount  Float         // Amount provider receives
-  paymentMethod   String        // e.g., "stripe", "card", "cash"
+  paymentMethod   String?       // Deprecated/System string e.g., "stripe"
   status          PaymentStatus @default(PENDING)
-  transactionId   String?       // Stripe transaction ID
-  stripePaymentIntentId String?
+  transactionId   String?       // External gateway reference
+  transactionRef  String?       // User entered ref (for Bank)
   paidAt          DateTime?
   refundedAt      DateTime?
   refundAmount    Float?
@@ -208,8 +213,45 @@ model Payment {
 
   // Relations
   booking         Booking       @relation(fields: [bookingId], references: [id])
+  method          PaymentMethod? @relation(fields: [methodId], references: [id])
+  transactions    Transaction[]
 
   @@map("payments")
+}
+
+// Payment Methods lookup table
+model PaymentMethod {
+  id            String    @id @default(uuid())
+  name          String    @unique // JazzCash, Easypaisa, Bank, COD
+  type          String    // wallet, bank, offline
+  description   String?
+  icon          String?
+  isActive      Boolean   @default(true)
+  metadata      Json?     // Store specific instructions (e.g. Bank Account details)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  payments      Payment[]
+
+  @@map("payment_methods")
+}
+
+// Transaction logs for auditing
+model Transaction {
+  id              String        @id @default(uuid())
+  paymentId       String
+  userId          String?
+  amount          Float
+  status          PaymentStatus @default(PENDING)
+  gatewayResponse Json?         // For storing simulated responses
+  reference       String?       // e.g. Phone number or Bank Ref
+  createdAt       DateTime      @default(now())
+
+  // Relations
+  payment         Payment       @relation(fields: [paymentId], references: [id])
+
+  @@map("transactions")
 }
 
 // Review and Rating model
@@ -276,4 +318,42 @@ model Setting {
   updatedAt   DateTime @updatedAt
 
   @@map("settings")
+}
+
+// Chat System Models
+model Conversation {
+  id              String    @id @default(uuid())
+  bookingId       String    @unique
+  customerId      String
+  providerId      String
+  lastMessage     String?
+  lastMessageAt   DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // Relations
+  booking         Booking   @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  customer        User      @relation(fields: [customerId], references: [id])
+  provider        Provider  @relation(fields: [providerId], references: [id])
+  messages        Message[]
+
+  @@map("conversations")
+}
+
+model Message {
+  id              String      @id @default(uuid())
+  conversationId  String
+  senderId        String
+  senderType      UserRole    // Reusing CUSTOMER/PROVIDER from UserRole
+  text            String?
+  type            String      @default("TEXT") // TEXT, IMAGE, LOCATION
+  fileUrl         String?
+  metadata        Json?       // For coordinates or other data
+  isRead          Boolean     @default(false)
+  createdAt       DateTime    @default(now())
+
+  // Relations
+  conversation    Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@map("messages")
 }

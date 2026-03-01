@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import ProviderSidebar from '../components/ProviderSidebar';
-import { providersAPI } from '../services/api';
 
 const ProviderProfileEdit = () => {
   const { currentUser, isAuthenticated, setCurrentUser } = useAuth();

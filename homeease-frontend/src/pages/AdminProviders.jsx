@@ -30,18 +30,20 @@ const AdminProviders = () => {
   const fetchProviders = async () => {
     try {
       setLoading(true);
-      const response = await adminAPI.getAllProviders({ limit: 100 });
+      const response = await adminAPI.getAllProviders({ limit: 500 });
       const providerData = response.data.data;
+      const pagination = response.data.pagination || {};
       setProviders(providerData);
 
-      // Calculate stats
+      // Use API total for count; compute other stats from fetched list
+      const total = pagination.total ?? providerData.length;
       const verified = providerData.filter(p => p.isVerified).length;
-      const avgRating = providerData.length > 0 
+      const avgRating = providerData.length > 0
         ? (providerData.reduce((sum, p) => sum + p.rating, 0) / providerData.length).toFixed(1)
         : 0;
       const totalReviews = providerData.reduce((sum, p) => sum + p.totalReviews, 0);
 
-      setStats({ total: providerData.length, verified, avgRating, totalReviews });
+      setStats({ total, verified, avgRating, totalReviews });
     } catch (error) {
       console.error('Error fetching providers:', error);
     } finally {

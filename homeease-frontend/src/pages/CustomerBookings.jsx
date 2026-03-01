@@ -11,6 +11,11 @@ const CustomerBookings = () => {
   const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState('all');
   const [actionLoading, setActionLoading] = useState({});
+  const [detailsBooking, setDetailsBooking] = useState(null);
+
+  const triggerChat = (booking) => {
+    window.dispatchEvent(new CustomEvent('open_chat', { detail: { bookingId: booking.id } }));
+  };
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -23,7 +28,7 @@ const CustomerBookings = () => {
   useEffect(() => {
     const fetchBookings = async () => {
       if (!currentUser) return;
-      
+
       try {
         setLoading(true);
         const response = await bookingsAPI.getAll();
@@ -42,16 +47,16 @@ const CustomerBookings = () => {
   // Handle Cancel Booking
   const handleCancelBooking = async (bookingId) => {
     const reason = prompt('Please provide a reason for cancellation (optional):');
-    
+
     try {
       setActionLoading(prev => ({ ...prev, [bookingId]: 'cancelling' }));
       await bookingsAPI.updateStatus(bookingId, 'CANCELLED', reason || undefined);
-      
+
       // Update local state
-      setBookings(prev => prev.map(b => 
+      setBookings(prev => prev.map(b =>
         b.id === bookingId ? { ...b, status: 'CANCELLED' } : b
       ));
-      
+
       alert('Booking cancelled successfully');
     } catch (error) {
       console.error('Error cancelling booking:', error);
@@ -65,16 +70,16 @@ const CustomerBookings = () => {
   const handleMarkCompleted = async (bookingId) => {
     const confirm = window.confirm('Mark this booking as completed? This action confirms that the service was successfully delivered.');
     if (!confirm) return;
-    
+
     try {
       setActionLoading(prev => ({ ...prev, [bookingId]: 'completing' }));
       await bookingsAPI.updateStatus(bookingId, 'COMPLETED');
-      
+
       // Update local state
-      setBookings(prev => prev.map(b => 
+      setBookings(prev => prev.map(b =>
         b.id === bookingId ? { ...b, status: 'COMPLETED' } : b
       ));
-      
+
       alert('Booking marked as completed!');
     } catch (error) {
       console.error('Error marking booking as completed:', error);
@@ -84,18 +89,13 @@ const CustomerBookings = () => {
     }
   };
 
-  // Handle View Details
-  const handleViewDetails = (booking) => {
-    alert(`Booking Details:
-
-Booking ID: ${booking.id}
-Service: ${booking.service?.name || booking.serviceName}
-Provider: ${booking.provider?.name || 'N/A'}
-Status: ${booking.status}
-Date: ${new Date(booking.date).toLocaleDateString()}
-Time: ${booking.timeSlot}
-Location: ${booking.address}
-Total Amount: Rs. ${booking.totalAmount}`);
+  // Format booking date and time from API
+  const formatBookingDateTime = (date, timeSlot) => {
+    if (!date) return { dateStr: '—', timeStr: timeSlot || '—' };
+    const d = new Date(date);
+    if (isNaN(d.getTime())) return { dateStr: '—', timeStr: timeSlot || '—' };
+    const dateStr = d.toLocaleDateString(undefined, { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
+    return { dateStr, timeStr: timeSlot || '—' };
   };
 
   // Don't render if no user
@@ -104,17 +104,17 @@ Total Amount: Rs. ${booking.totalAmount}`);
   }
 
   // Filter bookings based on status
-  const filteredBookings = activeFilter === 'all' 
-    ? bookings 
+  const filteredBookings = activeFilter === 'all'
+    ? bookings
     : bookings.filter(b => {
-        if (activeFilter === 'upcoming') return b.status === 'PENDING' || b.status === 'CONFIRMED';
-        if (activeFilter === 'completed') return b.status === 'COMPLETED';
-        if (activeFilter === 'cancelled') return b.status === 'CANCELLED';
-        return true;
-      });
+      if (activeFilter === 'upcoming') return b.status === 'PENDING' || b.status === 'CONFIRMED';
+      if (activeFilter === 'completed') return b.status === 'COMPLETED';
+      if (activeFilter === 'cancelled') return b.status === 'CANCELLED';
+      return true;
+    });
 
   const getStatusColor = (status) => {
-    switch(status) {
+    switch (status) {
       case 'PENDING': return 'bg-yellow-100 text-yellow-700';
       case 'CONFIRMED': return 'bg-green-100 text-green-700';
       case 'COMPLETED': return 'bg-blue-100 text-blue-700';
@@ -142,41 +142,37 @@ Total Amount: Rs. ${booking.totalAmount}`);
             <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => setActiveFilter('all')}
-                className={`px-4 py-2 rounded-lg font-medium transition ${
-                  activeFilter === 'all'
-                    ? 'bg-gray-900 text-white shadow-lg'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
+                className={`px-4 py-2 rounded-lg font-medium transition ${activeFilter === 'all'
+                  ? 'bg-gray-900 text-white shadow-lg'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
               >
                 All Bookings ({bookings.length})
               </button>
               <button
                 onClick={() => setActiveFilter('upcoming')}
-                className={`px-4 py-2 rounded-lg font-medium transition ${
-                  activeFilter === 'upcoming'
-                    ? 'bg-gray-900 text-white shadow-lg'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
+                className={`px-4 py-2 rounded-lg font-medium transition ${activeFilter === 'upcoming'
+                  ? 'bg-gray-900 text-white shadow-lg'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
               >
                 Upcoming ({bookings.filter(b => b.status === 'PENDING' || b.status === 'CONFIRMED').length})
               </button>
               <button
                 onClick={() => setActiveFilter('completed')}
-                className={`px-4 py-2 rounded-lg font-medium transition ${
-                  activeFilter === 'completed'
-                    ? 'bg-gray-900 text-white shadow-lg'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
+                className={`px-4 py-2 rounded-lg font-medium transition ${activeFilter === 'completed'
+                  ? 'bg-gray-900 text-white shadow-lg'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
               >
                 Completed ({bookings.filter(b => b.status === 'COMPLETED').length})
               </button>
               <button
                 onClick={() => setActiveFilter('cancelled')}
-                className={`px-4 py-2 rounded-lg font-medium transition ${
-                  activeFilter === 'cancelled'
-                    ? 'bg-gray-900 text-white shadow-lg'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
+                className={`px-4 py-2 rounded-lg font-medium transition ${activeFilter === 'cancelled'
+                  ? 'bg-gray-900 text-white shadow-lg'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
               >
                 Cancelled ({bookings.filter(b => b.status === 'CANCELLED').length})
               </button>
@@ -197,8 +193,8 @@ Total Amount: Rs. ${booking.totalAmount}`);
                   {activeFilter === 'all' ? 'No bookings yet' : `No ${activeFilter} bookings`}
                 </h3>
                 <p className="text-gray-600 mb-6">
-                  {activeFilter === 'all' 
-                    ? 'Start by browsing our services' 
+                  {activeFilter === 'all'
+                    ? 'Start by browsing our services'
                     : 'Try changing the filter or create a new booking'}
                 </p>
                 {activeFilter === 'all' && (
@@ -266,14 +262,22 @@ Total Amount: Rs. ${booking.totalAmount}`);
                       </div>
 
                       <div className="flex flex-col gap-2 w-full">
-                        <button 
-                          onClick={() => handleViewDetails(booking)}
+                        <button
+                          onClick={() => setDetailsBooking(booking)}
                           className="px-4 py-2 text-sm border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium"
                         >
                           View Details
                         </button>
+                        {booking.status !== 'CANCELLED' && booking.status !== 'REJECTED' && (
+                          <button
+                            onClick={() => triggerChat(booking)}
+                            className="px-4 py-2 text-sm bg-blue-50 text-blue-600 border border-blue-200 rounded-lg hover:bg-blue-100 transition font-medium flex items-center justify-center gap-2"
+                          >
+                            <span>💬</span> Chat with Provider
+                          </button>
+                        )}
                         {booking.status === 'CONFIRMED' && (
-                          <button 
+                          <button
                             onClick={() => handleMarkCompleted(booking.id)}
                             disabled={actionLoading[booking.id]}
                             className="px-4 py-2 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed"
@@ -287,7 +291,7 @@ Total Amount: Rs. ${booking.totalAmount}`);
                           </button>
                         )}
                         {(booking.status === 'PENDING' || booking.status === 'CONFIRMED') && (
-                          <button 
+                          <button
                             onClick={() => handleCancelBooking(booking.id)}
                             disabled={actionLoading[booking.id]}
                             className="px-4 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed"
@@ -304,6 +308,80 @@ Total Amount: Rs. ${booking.totalAmount}`);
           </div>
         </div>
       </div>
+
+      {/* View Details Modal */}
+      {detailsBooking && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setDetailsBooking(null)}>
+          <div className="bg-white rounded-xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <div className="p-6 border-b border-gray-200 flex items-center justify-between">
+              <h3 className="text-xl font-semibold text-gray-800">Booking Details</h3>
+              <button
+                type="button"
+                onClick={() => setDetailsBooking(null)}
+                className="text-gray-500 hover:text-gray-700 p-1"
+                aria-label="Close"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
+              </button>
+            </div>
+            <div className="p-6 space-y-4">
+              <div>
+                <p className="text-xs font-medium text-gray-500 uppercase">Service</p>
+                <p className="text-gray-800 font-medium">{detailsBooking.serviceName || detailsBooking.service?.name || 'Service'}</p>
+              </div>
+              <div>
+                <p className="text-xs font-medium text-gray-500 uppercase">Status</p>
+                <span className={`inline-block px-2 py-1 rounded-full text-sm font-medium ${getStatusColor(detailsBooking.status)}`}>{detailsBooking.status}</span>
+              </div>
+              <div>
+                <p className="text-xs font-medium text-gray-500 uppercase">Booking ID</p>
+                <p className="text-gray-800 font-mono text-sm">{detailsBooking.bookingNumber || detailsBooking.id?.slice(0, 8).toUpperCase()}</p>
+              </div>
+              <div>
+                <p className="text-xs font-medium text-gray-500 uppercase">Provider</p>
+                <p className="text-gray-800">{detailsBooking.provider?.name || 'N/A'}</p>
+                {detailsBooking.provider?.phone && <p className="text-sm text-gray-600">{detailsBooking.provider.phone}</p>}
+                {detailsBooking.provider?.email && <p className="text-sm text-gray-600">{detailsBooking.provider.email}</p>}
+              </div>
+              <div>
+                <p className="text-xs font-medium text-gray-500 uppercase">Date & Time</p>
+                <p className="text-gray-800">{formatBookingDateTime(detailsBooking.date, detailsBooking.timeSlot).dateStr} at {formatBookingDateTime(detailsBooking.date, detailsBooking.timeSlot).timeStr}</p>
+              </div>
+              <div>
+                <p className="text-xs font-medium text-gray-500 uppercase">Location</p>
+                <p className="text-gray-800">{detailsBooking.address || `${detailsBooking.area || ''}, ${detailsBooking.city || ''}`.replace(/^,\s*|,\s*$/g, '').trim() || 'N/A'}</p>
+              </div>
+              {detailsBooking.jobDescription && (
+                <div>
+                  <p className="text-xs font-medium text-gray-500 uppercase">Job Description</p>
+                  <p className="text-gray-800 whitespace-pre-wrap">{detailsBooking.jobDescription}</p>
+                </div>
+              )}
+              {detailsBooking.notes && (
+                <div>
+                  <p className="text-xs font-medium text-gray-500 uppercase">Notes</p>
+                  <p className="text-gray-800">{detailsBooking.notes}</p>
+                </div>
+              )}
+              <div>
+                <p className="text-xs font-medium text-gray-500 uppercase">Total Amount</p>
+                <p className="text-xl font-bold text-primary-600">Rs. {(detailsBooking.totalAmount ?? detailsBooking.price)?.toLocaleString() || 'N/A'}</p>
+              </div>
+              {detailsBooking.status !== 'CANCELLED' && detailsBooking.status !== 'REJECTED' && (
+                <button
+                  onClick={() => {
+                    triggerChat(detailsBooking);
+                    setDetailsBooking(null);
+                  }}
+                  className="w-full py-3 bg-blue-600 text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-blue-700 transition"
+                >
+                  <span>💬</span> Continue to Chat
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -23,14 +23,28 @@ const CitySelection = () => {
 
   const handleCitySelect = (cityName) => {
     setSelectedCity(cityName);
-    // Check if there's a search query in sessionStorage
+    // Prefer strict service selection (serviceId + name for resolving to DB id)
+    const selectedServiceId = sessionStorage.getItem('selectedServiceId');
+    const selectedServiceName = sessionStorage.getItem('selectedServiceName');
+    if (selectedServiceId || selectedServiceName) {
+      sessionStorage.removeItem('selectedServiceId');
+      sessionStorage.removeItem('selectedServiceName');
+      const params = new URLSearchParams({ city: cityName });
+      if (selectedServiceId) params.set('service', selectedServiceId);
+      if (selectedServiceName) params.set('serviceName', selectedServiceName);
+      navigate(`/services?${params.toString()}`);
+      return;
+    }
+
+    // Fallback: search query in sessionStorage
     const searchQuery = sessionStorage.getItem('searchQuery');
     if (searchQuery) {
       sessionStorage.removeItem('searchQuery');
       navigate(`/services?city=${cityName}&search=${searchQuery}`);
-    } else {
-      navigate(`/services?city=${cityName}`);
+      return;
     }
+
+    navigate(`/services?city=${cityName}`);
   };
 
   return (

@@ -32,6 +32,19 @@ const limiter = rateLimit({
 
 app.use('/api/', limiter);
 
+// Root route - point users to the API
+app.get('/', (req, res) => {
+  res.status(200).json({
+    status: 'success',
+    message: 'HomEase API Server',
+    docs: {
+      api: '/api',
+      health: '/health',
+    },
+    hint: 'Use the frontend at http://localhost:5173 or call /api endpoints.',
+  });
+});
+
 // Health check route
 app.get('/health', (req, res) => {
   res.status(200).json({

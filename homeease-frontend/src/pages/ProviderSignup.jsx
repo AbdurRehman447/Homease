@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Mail, Lock, Eye, EyeOff, User, Phone, MapPin, DollarSign, Clock, FileText, Award, Briefcase } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, User, Phone, MapPin, Clock, FileText, Award, Briefcase } from 'lucide-react';
 
 const ProviderSignup = () => {
   const navigate = useNavigate();
@@ -118,7 +118,7 @@ const ProviderSignup = () => {
         {/* Progress Steps */}
         <div className="mb-8">
           <div className="flex items-center">
-            {[1, 2, 3, 4].map((step, index) => (
+            {[1, 2, 3, 4].map((step) => (
               <React.Fragment key={step}>
                 <div className="flex flex-col items-center">
                   <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 font-semibold Rs.{
@@ -145,12 +145,6 @@ const ProviderSignup = () => {
           </div>
         </div>
 
-        {/* Demo Notice */}
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
-          <p className="text-sm text-yellow-800">
-            <strong>Demo Mode:</strong> This is a demonstration signup. No real verification or payments required.
-          </p>
-        </div>
 
         {/* Form */}
         <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
@@ -399,14 +393,14 @@ const ProviderSignup = () => {
                     Starting Price (Rs.) *
                   </label>
                   <div className="relative">
-                    <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-sm font-medium text-gray-500">PKR</span>
                     <input
                       type="number"
                       required
                       min="0"
                       value={formData.startingPrice}
                       onChange={(e) => setFormData({ ...formData, startingPrice: e.target.value })}
-                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       placeholder="2500"
                     />
                   </div>

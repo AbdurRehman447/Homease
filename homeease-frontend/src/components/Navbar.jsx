@@ -1,18 +1,60 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Briefcase, ChevronDown } from 'lucide-react';
-import servicesData from '../data/services.json';
+import { servicesAPI } from '../services/api';
+import staticServices from '../data/services.json';
 
 const Navbar = () => {
-  const { isAuthenticated, currentUser, logout, userRole } = useAuth();
+  const { isAuthenticated, currentUser, logout } = useAuth();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
   const closeTimeoutRef = React.useRef(null);
   
-  // Get popular services for dropdown
-  const popularServices = servicesData.filter(s => s.popular).slice(0, 6);
+  const mapStaticServices = (list) =>
+    list.map((s) => ({
+      ...s,
+      isPopular: s.isPopular ?? s.popular,
+    }));
+
+  const [popularServices, setPopularServices] = useState(() =>
+    mapStaticServices(staticServices).filter((s) => s.isPopular).slice(0, 6)
+  );
+
+  // Get popular services for dropdown (from backend so IDs match DB)
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchPopularServices = async () => {
+      try {
+        const res = await servicesAPI.getAll({
+          popular: true,
+          active: true,
+          limit: 50,
+        });
+        const list = res?.data?.data || [];
+        const source = list.length ? list : staticServices;
+        if (isMounted)
+          setPopularServices(
+            mapStaticServices(source).filter((s) => s.isPopular).slice(0, 6)
+          );
+      } catch (e) {
+        console.error('Failed to load services for navbar:', e);
+        if (isMounted)
+          setPopularServices(
+            mapStaticServices(staticServices)
+              .filter((s) => s.isPopular)
+              .slice(0, 6)
+          );
+      }
+    };
+
+    fetchPopularServices();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const handleLogout = () => {
     logout();
@@ -26,8 +68,9 @@ const Navbar = () => {
     setServicesDropdownOpen(false);
   };
 
-  const handleServiceSelect = (serviceName) => {
-    sessionStorage.setItem('searchQuery', serviceName);
+  const handleServiceSelect = (service) => {
+    if (service?.id) sessionStorage.setItem('selectedServiceId', service.id);
+    if (service?.name) sessionStorage.setItem('selectedServiceName', service.name);
     navigate('/select-city');
     setServicesDropdownOpen(false);
   };
@@ -108,7 +151,7 @@ const Navbar = () => {
                   {popularServices.map((service) => (
                     <button
                       key={service.id}
-                      onClick={() => handleServiceSelect(service.name)}
+                      onClick={() => handleServiceSelect(service)}
                       className="w-full px-4 py-3 flex items-center space-x-3 hover:bg-blue-50 transition group/item"
                     >
                       <span className="text-2xl">{service.icon}</span>

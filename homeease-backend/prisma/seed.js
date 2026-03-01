@@ -169,9 +169,18 @@ async function main() {
     }),
   ]);
 
-  // 4. Create 100 Providers
-  console.log('👨‍🔧 Creating 100 providers...');
-  const providerListData = [
+  // 4. Create 240 Providers (2 per city × service) with 100 + 140 unique names
+  // Always clear existing providers so re-seed does not hit unique email constraint
+  console.log('🗑️  Clearing existing providers and related data...');
+  await prisma.payment.deleteMany();
+  await prisma.review.deleteMany();
+  await prisma.notification.deleteMany({ where: { providerId: { not: null } } });
+  await prisma.booking.deleteMany();
+  await prisma.providerService.deleteMany();
+  await prisma.provider.deleteMany();
+
+  console.log('👨‍🔧 Creating 240 providers (2 per city per service)...');
+  const providerList100 = [
     { name: 'Bisharat', email: 'bisharat123@gmail.com' }, { name: 'Hamdan', email: 'hamdan.pk01@gmail.com' }, { name: 'Zaryab', email: 'zaryab.mail@gmail.com' }, { name: 'Faizan', email: 'faizan786@gmail.com' }, { name: 'Adeel', email: 'adeel.work@gmail.com' },
     { name: 'Arsalan', email: 'arsalan92@gmail.com' }, { name: 'Danish', email: 'danish.contact@gmail.com' }, { name: 'Taha', email: 'taha.pk@gmail.com' }, { name: 'Huzaifa', email: 'huzaifa.dev@gmail.com' }, { name: 'Rehan', email: 'rehan.mailbox@gmail.com' },
     { name: 'Salman', email: 'salman.user@gmail.com' }, { name: 'Waqas', email: 'waqas.info@gmail.com' }, { name: 'Owais', email: 'owais.khan@gmail.com' }, { name: 'Imran', email: 'imran.connect@gmail.com' }, { name: 'Saqib', email: 'saqib123@gmail.com' },
@@ -193,64 +202,77 @@ async function main() {
     { name: 'Salman Unique', email: 'salman.unique@gmail.com' }, { name: 'Razi', email: 'razi.mail@gmail.com' }, { name: 'Ehsan', email: 'ehsan.pk@gmail.com' }, { name: 'Qasim', email: 'qasim.connect@gmail.com' }, { name: 'Jibran', email: 'jibran.mail@gmail.com' },
     { name: 'Shayan Unique', email: 'shayan.unique@gmail.com' }, { name: 'Aatif', email: 'aatif.pk@gmail.com' }, { name: 'Nofil', email: 'nofil.work@gmail.com' }, { name: 'Zarar', email: 'zarar.mail@gmail.com' }, { name: 'Ameen', email: 'ameen.pk@gmail.com' },
   ];
+  const providerList140 = [
+    { name: 'Aaban', email: 'aaban01@gmail.com' }, { name: 'Adeelan', email: 'adeelan.pk@gmail.com' }, { name: 'Afaq', email: 'afaq.mail@gmail.com' }, { name: 'Ahmar', email: 'ahmar.dev@gmail.com' }, { name: 'Ahtesham', email: 'ahtesham.work@gmail.com' },
+    { name: 'Ajmal', email: 'ajmal.info@gmail.com' }, { name: 'Akif', email: 'akif.pk@gmail.com' }, { name: 'Amaan', email: 'amaan.mail@gmail.com' }, { name: 'Ameel', email: 'ameel.user@gmail.com' }, { name: 'Anwaar', email: 'anwaar.pk@gmail.com' },
+    { name: 'Aqeel', email: 'aqeel.connect@gmail.com' }, { name: 'Arbaz', email: 'arbaz.mail@gmail.com' }, { name: 'Arifin', email: 'arifin.pk@gmail.com' }, { name: 'Arqam', email: 'arqam.dev@gmail.com' }, { name: 'Asadullah', email: 'asadullah.work@gmail.com' },
+    { name: 'Ashhad', email: 'ashhad.mail@gmail.com' }, { name: 'Asim', email: 'asim.pk@gmail.com' }, { name: 'Ataullah', email: 'ataullah.user@gmail.com' }, { name: 'Aun', email: 'aun.mail@gmail.com' }, { name: 'Azeem', email: 'azeem.pk@gmail.com' },
+    { name: 'Badar', email: 'badar.work@gmail.com' }, { name: 'Bahran', email: 'bahran.mail@gmail.com' }, { name: 'Burhan', email: 'burhan.pk@gmail.com' }, { name: 'Dani', email: 'dani.user@gmail.com' }, { name: 'Dawood', email: 'dawood.mail@gmail.com' },
+    { name: 'Ehtisham', email: 'ehtisham.pk@gmail.com' }, { name: 'Eijaz', email: 'eijaz.work@gmail.com' }, { name: 'Emad', email: 'emad.mail@gmail.com' }, { name: 'Fahim', email: 'fahim.pk@gmail.com' }, { name: 'Faiq', email: 'faiq.user@gmail.com' },
+    { name: 'Faran', email: 'faran.mail@gmail.com' }, { name: 'Farooq', email: 'farooq.pk@gmail.com' }, { name: 'Fateh', email: 'fateh.work@gmail.com' }, { name: 'Fiaz', email: 'fiaz.mail@gmail.com' }, { name: 'Furqan', email: 'furqan.pk@gmail.com' },
+    { name: 'Ghazanfar', email: 'ghazanfar.dev@gmail.com' }, { name: 'Gohar', email: 'gohar.mail@gmail.com' }, { name: 'Habib', email: 'habib.pk@gmail.com' }, { name: 'Hakeem', email: 'hakeem.work@gmail.com' }, { name: 'Hamid', email: 'hamid.mail@gmail.com' },
+    { name: 'Hanzala', email: 'hanzala.pk@gmail.com' }, { name: 'Harith', email: 'harith.user@gmail.com' }, { name: 'Hashir', email: 'hashir.mail@gmail.com' }, { name: 'Haseeb', email: 'haseeb.pk@gmail.com' }, { name: 'Hilal', email: 'hilal.work@gmail.com' },
+    { name: 'Ibrar', email: 'ibrar.mail@gmail.com' }, { name: 'Ilyas', email: 'ilyas.pk@gmail.com' }, { name: 'Inam', email: 'inam.user@gmail.com' }, { name: 'Irteza', email: 'irteza.mail@gmail.com' }, { name: 'Ishaq', email: 'ishaq.pk@gmail.com' },
+    { name: 'Izaan', email: 'izaan.work@gmail.com' }, { name: 'Jahanzaib', email: 'jahanzaib.mail@gmail.com' }, { name: 'Jalal', email: 'jalal.pk@gmail.com' }, { name: 'Jamal', email: 'jamal.user@gmail.com' }, { name: 'Javed', email: 'javed.mail@gmail.com' },
+    { name: 'Jawad', email: 'jawad.pk@gmail.com' }, { name: 'Kamal', email: 'kamal.work@gmail.com' }, { name: 'Kareem', email: 'kareem.mail@gmail.com' }, { name: 'Kashan', email: 'kashan.pk@gmail.com' }, { name: 'Khizar', email: 'khizar.user@gmail.com' },
+    { name: 'Luqman', email: 'luqman.mail@gmail.com' }, { name: 'Mahad', email: 'mahad.pk@gmail.com' }, { name: 'Mahir', email: 'mahir.work@gmail.com' }, { name: 'Majid', email: 'majid.mail@gmail.com' }, { name: 'Mansoor', email: 'mansoor.pk@gmail.com' },
+    { name: 'Marwan', email: 'marwan.user@gmail.com' }, { name: 'Masood', email: 'masood.mail@gmail.com' }, { name: 'Meesam', email: 'meesam.pk@gmail.com' }, { name: 'Mikail', email: 'mikail.work@gmail.com' }, { name: 'Mohid', email: 'mohid.mail@gmail.com' },
+    { name: 'Mohtashim', email: 'mohtashim.pk@gmail.com' }, { name: 'Muaz', email: 'muaz.user@gmail.com' }, { name: 'Mudassir', email: 'mudassir.mail@gmail.com' }, { name: 'Mujahid', email: 'mujahid.pk@gmail.com' }, { name: 'Mukarram', email: 'mukarram.work@gmail.com' },
+    { name: 'Musab', email: 'musab.mail@gmail.com' }, { name: 'Mustafa', email: 'mustafa.pk@gmail.com' }, { name: 'Muzzammil', email: 'muzzammil.user@gmail.com' }, { name: 'Nadir', email: 'nadir.mail@gmail.com' }, { name: 'Nafees', email: 'nafees.pk@gmail.com' },
+    { name: 'Najeeb', email: 'najeeb.work@gmail.com' }, { name: 'Nashit', email: 'nashit.mail@gmail.com' }, { name: 'Naveer', email: 'naveer.pk@gmail.com' }, { name: 'Nazim', email: 'nazim.user@gmail.com' }, { name: 'Nihal', email: 'nihal.mail@gmail.com' },
+    { name: 'Noorullah', email: 'noorullah.pk@gmail.com' }, { name: 'Obaid', email: 'obaid.work@gmail.com' }, { name: 'Omair', email: 'omair.mail@gmail.com' }, { name: 'Qadeer', email: 'qadeer.pk@gmail.com' }, { name: 'Qayyam', email: 'qayyam.user@gmail.com' },
+    { name: 'Rafay', email: 'rafay.mail@gmail.com' }, { name: 'Rafi', email: 'rafi.pk@gmail.com' }, { name: 'Rashid', email: 'rashid.work@gmail.com' }, { name: 'Sabir', email: 'sabir.mail@gmail.com' }, { name: 'Sadiq', email: 'sadiq.pk@gmail.com' },
+    { name: 'Safdar', email: 'safdar.user@gmail.com' }, { name: 'Sajid', email: 'sajid.mail@gmail.com' }, { name: 'Saleem', email: 'saleem.pk@gmail.com' }, { name: 'Sarim', email: 'sarim.work@gmail.com' }, { name: 'Shahmeer', email: 'shahmeer.mail@gmail.com' },
+    { name: 'Shams', email: 'shams.pk@gmail.com' }, { name: 'Shazeb', email: 'shazeb.user@gmail.com' }, { name: 'Siddiq', email: 'siddiq.mail@gmail.com' }, { name: 'Siraj', email: 'siraj.pk@gmail.com' }, { name: 'Suleman', email: 'suleman.work@gmail.com' },
+    { name: 'Talib', email: 'talib.mail@gmail.com' }, { name: 'Tariq', email: 'tariq.pk@gmail.com' }, { name: 'Uzair', email: 'uzair.work@gmail.com' }, { name: 'Waleed', email: 'waleed.mail@gmail.com' }, { name: 'Yahya', email: 'yahya.pk@gmail.com' },
+    { name: 'Yameen', email: 'yameen.work@gmail.com' }, { name: 'Zaki', email: 'zaki.mail@gmail.com' }, { name: 'Zayan', email: 'zayan.pk@gmail.com' }, { name: 'Zohib', email: 'zohib.work@gmail.com' }, { name: 'Zulfiqar', email: 'zulfiqar.mail@gmail.com' },
+  ];
+  const providerListData = [...providerList100, ...providerList140];
 
   const providers = [];
-  for (let i = 0; i < providerListData.length; i++) {
-    const pData = providerListData[i];
-    const city = cities[i % cities.length];
-    const area = city.areas[i % city.areas.length];
+  let providerIndex = 0;
+  for (const city of cities) {
+    const areas = Array.isArray(city.areas) ? city.areas : [];
+    for (const service of services) {
+      for (let i = 0; i < 2; i++) {
+        const pData = providerListData[providerIndex % providerListData.length];
+        providerIndex += 1;
+        const area = areas.length > 0 ? areas[i % areas.length] : city.name;
 
-    const provider = await prisma.provider.create({
-      data: {
-        name: pData.name,
-        email: pData.email,
-        password: hashedPassword,
-        phone: `+92-3${Math.floor(Math.random() * 90 + 10)}-${Math.floor(Math.random() * 8999999 + 1000000)}`,
-        bio: `Experienced professional providing high-quality services in ${city.name}.`,
-        experience: Math.floor(Math.random() * 12) + 2,
-        avatar: getInitialsAvatar(pData.name),
-        address: `${area}, Street ${i + 1}`,
-        city: city.name,
-        location: area,
-        status: 'APPROVED',
-        isVerified: true,
-        rating: Math.floor(Math.random() * 4) + 2,
-        totalReviews: Math.floor(Math.random() * 150) + 20,
-        totalBookings: Math.floor(Math.random() * 200) + 30,
-        completionRate: Math.floor(95 + Math.random() * 5),
-        responseTime: '1-3 hours',
-      },
-    });
-    providers.push(provider);
-  }
+        // Ensure unique email per provider (Gmail ignores +suffix)
+        const uniqueEmail = pData.email.replace('@', `+p${providerIndex}@`);
+        const provider = await prisma.provider.create({
+          data: {
+            name: pData.name,
+            email: uniqueEmail,
+            password: hashedPassword,
+            phone: `+92-3${Math.floor(Math.random() * 90 + 10)}-${Math.floor(Math.random() * 8999999 + 1000000)}`,
+            bio: `Experienced ${service.name.toLowerCase()} professional in ${city.name}.`,
+            experience: Math.floor(Math.random() * 12) + 2,
+            avatar: getInitialsAvatar(pData.name),
+            address: `${area}, Street ${providerIndex}`,
+            city: city.name,
+            location: area,
+            status: 'APPROVED',
+            isVerified: true,
+            rating: Math.floor(Math.random() * 2) + 4,
+            totalReviews: Math.floor(Math.random() * 150) + 20,
+            totalBookings: Math.floor(Math.random() * 200) + 30,
+            completionRate: Math.floor(95 + Math.random() * 5),
+            responseTime: '1-3 hours',
+          },
+        });
+        providers.push(provider);
 
-  // 5. Link Providers with Services
-  console.log('🔗 Linking providers with services...');
-  for (let i = 0; i < providers.length; i++) {
-    // Each provider gets at least one service
-    const mainServiceIndex = i % services.length;
-    const mainService = services[mainServiceIndex];
-
-    await prisma.providerService.create({
-      data: {
-        providerId: providers[i].id,
-        serviceId: mainService.id,
-        price: mainService.basePrice + (Math.floor(Math.random() * 15) * 100),
-        description: `Professional ${mainService.name} services including all standard requirements.`,
-      },
-    });
-
-    // Assign a second service to 50% of providers to ensure multi-service availability
-    if (i % 2 === 0) {
-      const extraService = services[(mainServiceIndex + 1) % services.length];
-      await prisma.providerService.create({
-        data: {
-          providerId: providers[i].id,
-          serviceId: extraService.id,
-          price: extraService.basePrice + (Math.floor(Math.random() * 15) * 100),
-          description: `Also providing expert ${extraService.name} solutions for residential needs.`,
-        },
-      });
+        await prisma.providerService.create({
+          data: {
+            providerId: provider.id,
+            serviceId: service.id,
+            price: service.basePrice + Math.floor(Math.random() * 15) * 100,
+            description: `Professional ${service.name} services including all standard requirements.`,
+          },
+        });
+      }
     }
   }
 

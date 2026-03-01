@@ -57,41 +57,53 @@ export const getProviderAvailabilityRange = async (providerId, startDate, endDat
 
 // Validate booking date and time
 export const validateBookingDateTime = (date, timeSlot) => {
-  const bookingDate = new Date(date);
   const now = new Date();
+  const bookingDate = new Date(date);
 
-  // Check if date is in the past
-  if (bookingDate < now) {
+  // Compare calendar dates only (ignore time) so "today" is valid
+  const bookingDay = new Date(bookingDate.getFullYear(), bookingDate.getMonth(), bookingDate.getDate());
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  if (bookingDay < today) {
     return {
       valid: false,
       message: 'Booking date cannot be in the past',
     };
   }
 
-  // Check if booking is at least 2 hours in advance
-  const minAdvanceTime = new Date(now.getTime() + 2 * 60 * 60 * 1000);
-  if (bookingDate < minAdvanceTime) {
+  // Validate time slot format (e.g., "09:00 AM", "02:00 PM") and parse it
+  const timeSlotRegex = /^(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/;
+  const match = timeSlot && timeSlot.match(timeSlotRegex);
+  if (!match) {
     return {
       valid: false,
-      message: 'Bookings must be made at least 2 hours in advance',
+      message: 'Invalid time slot format. Use format: HH:MM AM/PM',
     };
+  }
+  const [, hourStr, minStr, period] = match;
+  let hour = parseInt(hourStr, 10);
+  const min = parseInt(minStr, 10);
+  if (period === 'PM' && hour !== 12) hour += 12;
+  if (period === 'AM' && hour === 12) hour = 0;
+  const bookingDateTime = new Date(bookingDate);
+  bookingDateTime.setHours(hour, min, 0, 0);
+
+  // If booking is today, require at least 2 hours from now
+  if (bookingDay.getTime() === today.getTime()) {
+    const minAdvanceTime = new Date(now.getTime() + 2 * 60 * 60 * 1000);
+    if (bookingDateTime < minAdvanceTime) {
+      return {
+        valid: false,
+        message: 'Bookings must be made at least 2 hours in advance',
+      };
+    }
   }
 
   // Check if booking is not more than 90 days in advance
   const maxAdvanceTime = new Date(now.getTime() + 90 * 24 * 60 * 60 * 1000);
-  if (bookingDate > maxAdvanceTime) {
+  if (bookingDateTime > maxAdvanceTime) {
     return {
       valid: false,
       message: 'Bookings cannot be made more than 90 days in advance',
-    };
-  }
-
-  // Validate time slot format (e.g., "09:00 AM", "02:00 PM")
-  const timeSlotRegex = /^(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/;
-  if (!timeSlotRegex.test(timeSlot)) {
-    return {
-      valid: false,
-      message: 'Invalid time slot format. Use format: HH:MM AM/PM',
     };
   }
 

@@ -1,10 +1,18 @@
+import http from 'http';
 import app from './app.js';
 import config from './config/config.js';
+import { initSocket } from './services/socket.service.js';
 
 const PORT = config.port;
 
+// Create HTTP server
+const server = http.createServer(app);
+
+// Initialize Socket.io
+initSocket(server);
+
 // Start server
-const server = app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log('╔════════════════════════════════════════╗');
   console.log('║     HomEase Backend API Server        ║');
   console.log('╚════════════════════════════════════════╝');

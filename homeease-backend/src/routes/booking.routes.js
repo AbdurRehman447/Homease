@@ -9,7 +9,13 @@ import {
   getAvailabilityRange,
   getBookingStatistics,
 } from '../controllers/booking.controller.js';
-import { authenticate, isCustomer, isProvider, isProviderOrAdmin } from '../middleware/auth.js';
+import {
+  authenticate,
+  optionalAuthenticate,
+  isCustomer,
+  isProvider,
+  isProviderOrAdmin
+} from '../middleware/auth.js';
 import { validate } from '../middleware/validate.js';
 import {
   createBookingSchema,
@@ -23,6 +29,9 @@ const router = express.Router();
 router.get('/availability/check', checkAvailability);
 router.get('/availability/range', getAvailabilityRange);
 
+// Create booking (customer OR guest)
+router.post('/', optionalAuthenticate, validate(createBookingSchema), createBooking);
+
 // All other booking routes require authentication
 router.use(authenticate);
 
@@ -31,8 +40,8 @@ router.get('/', getAllBookings);
 router.get('/statistics', isProviderOrAdmin, getBookingStatistics);
 router.get('/:id', getBookingById);
 
-// Create booking (customer only)
-router.post('/', isCustomer, validate(createBookingSchema), createBooking);
+// Get bookings (filtered by role)
+router.get('/', getAllBookings);
 
 // Update booking status
 router.patch('/:id/status', validate(updateBookingStatusSchema), updateBookingStatus);

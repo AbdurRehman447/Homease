@@ -2,13 +2,21 @@ import React, { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import BookingModal from './BookingModal';
 
-const ProviderCard = ({ provider }) => {
+const ProviderCard = ({ provider, selectedServiceId, selectedServiceName }) => {
   const [searchParams] = useSearchParams();
   const [showBookingModal, setShowBookingModal] = useState(false);
   const selectedCity = searchParams.get('city') || provider.city || provider.location;
-  
-  // Get the first service if provider has services
-  const primaryService = provider.services?.[0];
+
+  // Prefer the service the user filtered by; otherwise first service
+  const servicesList = provider.services || [];
+  const matchingService = selectedServiceId || selectedServiceName
+    ? servicesList.find(
+        (ps) =>
+          (selectedServiceId && ps.serviceId === selectedServiceId) ||
+          (selectedServiceName && ps.service?.name?.toLowerCase() === selectedServiceName?.toLowerCase())
+      )
+    : null;
+  const primaryService = matchingService || servicesList[0];
   const serviceName = primaryService?.service?.name || provider.serviceName || 'Service';
   const price = primaryService?.price || provider.price || 0;
   return (
@@ -91,6 +99,7 @@ const ProviderCard = ({ provider }) => {
             image: provider.avatar || provider.image
           }}
           selectedCity={selectedCity}
+          bookingServiceId={primaryService?.serviceId}
           onClose={() => setShowBookingModal(false)}
         />
       )}

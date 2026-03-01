@@ -65,8 +65,9 @@ Users can open the booking form in two ways:
 - **Full Service Address*** (text) - Required
   - Placeholder: "House/Flat No., Street Name, Landmark"
   
-- **Use Current Location** (button) - Demo, disabled
-  - Shows "(Demo - Not functional)" label
+- **Use my current location** (button) - Fills area and address from device GPS
+  - Uses browser Geolocation; reverse geocodes via Nominatim (no API key required)
+  - Optional coordinates are saved with the booking for future map display
 
 ---
 
@@ -183,6 +184,9 @@ bookingData: {
   jobDescription, serviceType, date, timeSlot,
   area, address, fullName, phone, email, notes
 }
+coordinates: { lat, lng } | null  // set when using "Use my current location"
+locationLoading: boolean
+locationError: string
 bookingConfirmed: boolean
 bookingId: string
 ```
@@ -251,19 +255,40 @@ bookingId: string
 
 ---
 
+## Optional: Google Maps integration
+
+**Current behaviour:** "Use my current location" works with **no API key** (browser Geolocation + Nominatim reverse geocode). Coordinates are stored with the booking.
+
+To add **Google Maps** (map widget + address autocomplete) you will need:
+
+1. **Google Cloud project**
+   - Go to [Google Cloud Console](https://console.cloud.google.com/)
+   - Create or select a project and enable:
+     - **Maps JavaScript API**
+     - **Geocoding API** (optional; for better reverse geocode)
+     - **Places API** (for address autocomplete)
+2. **API key**
+   - Create credentials → API key
+   - Restrict by HTTP referrer (e.g. `http://localhost:5173/*`, your production domain)
+3. **Frontend**
+   - Add `VITE_GOOGLE_MAPS_API_KEY=your_key` to `.env`
+   - Load the Maps script: `https://maps.googleapis.com/maps/api/js?key=KEY&libraries=places`
+   - Use Places Autocomplete on the address/area input and/or a Map component to show the pin
+
+---
+
 ## Future Enhancements (Backend Integration)
 
 When connecting to a real backend:
 1. Replace demo booking ID with real database ID
-2. Implement actual geolocation for "Use Current Location"
-3. Add provider real-time availability check
-4. Integrate payment gateway
-5. Send email/SMS confirmations
-6. Add booking modification/cancellation
-7. Implement real-time status updates
-8. Add file upload for job photos
-9. Provider acceptance/rejection flow
-10. In-app chat between customer and provider
+2. Add provider real-time availability check
+3. Integrate payment gateway
+4. Send email/SMS confirmations
+5. Add booking modification/cancellation
+6. Implement real-time status updates
+7. Add file upload for job photos
+8. Provider acceptance/rejection flow
+9. In-app chat between customer and provider
 
 ---
 

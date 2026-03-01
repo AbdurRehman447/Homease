@@ -1,11 +1,20 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const ServiceCard = ({ service }) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    if (service?.id) sessionStorage.setItem('selectedServiceId', service.id);
+    if (service?.name) sessionStorage.setItem('selectedServiceName', service.name);
+    navigate('/select-city');
+  };
+
   return (
-    <Link
-      to={`/services?category=${service.category}`}
-      className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 p-6 flex flex-col items-center text-center group hover:-translate-y-1"
+    <button
+      type="button"
+      onClick={handleClick}
+      className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 p-6 flex flex-col items-center text-center group hover:-translate-y-1 w-full"
     >
       <div className="text-5xl mb-4 group-hover:scale-110 transition-transform">
         {service.icon}
@@ -24,12 +33,12 @@ const ServiceCard = ({ service }) => {
           {service.duration}
         </p>
       </div>
-      {service.popular && (
+      {service.isPopular && (
         <span className="absolute top-2 right-2 bg-secondary-500 text-white text-xs px-2 py-1 rounded-full">
           Popular
         </span>
       )}
-    </Link>
+    </button>
   );
 };
 

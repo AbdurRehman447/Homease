@@ -6,28 +6,48 @@ import asyncHandler from '../utils/asyncHandler.js';
 export const authenticate = asyncHandler(async (req, res, next) => {
   // Get token from header
   const authHeader = req.headers.authorization;
-  
+
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     throw createError.unauthorized('No token provided');
   }
-  
+
   const token = authHeader.split(' ')[1];
-  
+
   try {
     // Verify token
     const decoded = verifyAccessToken(token);
-    
+
     // Attach user info to request
     req.user = {
       userId: decoded.userId,
       email: decoded.email,
       role: decoded.role,
     };
-    
+
     next();
   } catch (error) {
     throw createError.unauthorized('Invalid or expired token');
   }
+});
+
+// Optional authentication - proceeds regardless, attaches user if token exists
+export const optionalAuthenticate = asyncHandler(async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return next();
+  }
+  const token = authHeader.split(' ')[1];
+  try {
+    const decoded = verifyAccessToken(token);
+    req.user = {
+      userId: decoded.userId,
+      email: decoded.email,
+      role: decoded.role,
+    };
+  } catch (error) {
+    // Continue even if token is invalid
+  }
+  next();
 });
 
 // Authorize by role
@@ -36,11 +56,11 @@ export const authorize = (...roles) => {
     if (!req.user) {
       throw createError.unauthorized('Authentication required');
     }
-    
+
     if (!roles.includes(req.user.role)) {
       throw createError.forbidden('You do not have permission to access this resource');
     }
-    
+
     next();
   };
 };

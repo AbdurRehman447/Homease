@@ -14,18 +14,24 @@ import {
 // Get all bookings (with role-based filtering)
 export const getAllBookings = asyncHandler(async (req, res) => {
   const { userId, role } = req.user;
-  const { page = 1, limit = 10, status } = req.query;
-  
+  const { page = 1, limit = 10, status, providerId, customerId } = req.query;
+
   const skip = (parseInt(page) - 1) * parseInt(limit);
   const take = parseInt(limit);
-  
+
   // Build filter based on role
   const where = {
-    ...(role === 'CUSTOMER' && { customerId: userId }),
-    ...(role === 'PROVIDER' && { providerId: userId }),
+    ...(role === 'CUSTOMER' && {
+      customerId: userId,
+      ...(providerId && { providerId })
+    }),
+    ...(role === 'PROVIDER' && {
+      providerId: userId,
+      ...(customerId && { customerId })
+    }),
     ...(status && { status }),
   };
-  
+
   const [bookings, total] = await Promise.all([
     prisma.booking.findMany({
       where,
@@ -64,7 +70,7 @@ export const getAllBookings = asyncHandler(async (req, res) => {
     }),
     prisma.booking.count({ where }),
   ]);
-  
+
   return paginatedResponse(res, 'Bookings retrieved successfully', bookings, {
     page: parseInt(page),
     limit: parseInt(limit),
@@ -76,7 +82,7 @@ export const getAllBookings = asyncHandler(async (req, res) => {
 export const getBookingById = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { userId, role } = req.user;
-  
+
   const booking = await prisma.booking.findUnique({
     where: { id },
     include: {
@@ -106,26 +112,26 @@ export const getBookingById = asyncHandler(async (req, res) => {
       review: true,
     },
   });
-  
+
   if (!booking) {
     throw createError.notFound('Booking not found');
   }
-  
+
   // Verify access rights
   if (role === 'CUSTOMER' && booking.customerId !== userId) {
     throw createError.forbidden('You can only view your own bookings');
   }
-  
+
   if (role === 'PROVIDER' && booking.providerId !== userId) {
     throw createError.forbidden('You can only view your own bookings');
   }
-  
+
   return successResponse(res, 'Booking retrieved successfully', booking);
 });
 
 // Create new booking (Customer only)
 export const createBooking = asyncHandler(async (req, res) => {
-  const { userId } = req.user;
+  const userId = req.user?.userId;
   const {
     providerId,
     serviceId,
@@ -134,6 +140,7 @@ export const createBooking = asyncHandler(async (req, res) => {
     address,
     area,
     city,
+    coordinates,
     notes,
     jobDescription,
   } = req.body;
@@ -189,7 +196,7 @@ export const createBooking = asyncHandler(async (req, res) => {
   const booking = await prisma.booking.create({
     data: {
       bookingNumber,
-      customerId: userId,
+      customerId: userId || null,
       providerId,
       serviceId,
       serviceName: service.name,
@@ -201,6 +208,7 @@ export const createBooking = asyncHandler(async (req, res) => {
       address,
       area,
       city,
+      coordinates: coordinates || undefined,
       notes,
       jobDescription,
       status: 'PENDING',
@@ -240,32 +248,32 @@ export const updateBookingStatus = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { status, cancellationReason } = req.body;
   const { userId, role } = req.user;
-  
+
   // Get booking
   const booking = await prisma.booking.findUnique({
     where: { id },
   });
-  
+
   if (!booking) {
     throw createError.notFound('Booking not found');
   }
-  
+
   // Verify access
   if (role === 'PROVIDER' && booking.providerId !== userId) {
     throw createError.forbidden('You can only update your own bookings');
   }
-  
+
   if (role === 'CUSTOMER' && booking.customerId !== userId && status !== 'CANCELLED') {
     throw createError.forbidden('Customers can only cancel their bookings');
   }
-  
+
   // Update booking
   const updateData = {
     status,
     ...(cancellationReason && { cancellationReason }),
     ...(status === 'COMPLETED' && { completedAt: new Date() }),
   };
-  
+
   const updatedBooking = await prisma.booking.update({
     where: { id },
     data: updateData,
@@ -278,7 +286,7 @@ export const updateBookingStatus = asyncHandler(async (req, res) => {
       },
     },
   });
-  
+
   return successResponse(res, `Booking ${status.toLowerCase()} successfully`, updatedBooking);
 });
 

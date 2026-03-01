@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -26,14 +26,24 @@ import AdminAnalytics from './pages/AdminAnalytics';
 import AdminSettings from './pages/AdminSettings';
 import HowItWorks from './pages/HowItWorks';
 import About from './pages/About';
+import ChatWidget from './components/ChatWidget';
 import FAQ from './pages/FAQ';
 
 function AppContent() {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin');
   const isCustomerDashboard = location.pathname.startsWith('/customer');
-  const isProviderDashboard = location.pathname.startsWith('/provider') && location.pathname !== '/provider/signup';
+  const isProviderDashboard = [
+    '/provider/dashboard',
+    '/provider/profile',
+    '/provider/earnings'
+  ].some(path => location.pathname === path);
   const isDashboardRoute = isAdminRoute || isCustomerDashboard || isProviderDashboard;
+
+  // Scroll to top when route changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -125,6 +135,7 @@ function AppContent() {
         </Routes>
       </main>
       {!isDashboardRoute && <Footer />}
+      <ChatWidget />
     </div>
   );
 }

@@ -53,7 +53,7 @@ const Login = () => {
   };
 
   // Demo credentials helper
-  const useDemoAccount = (role) => {
+  const fillDemoAccount = (role) => {
     const demoCredentials = {
       customer: { email: 'umar.farooq@example.com', password: 'demo123' },
       provider: { email: 'ahmed.khan@example.com', password: 'demo123' },
@@ -204,7 +204,7 @@ const Login = () => {
             </p>
             <div className="flex flex-col space-y-2.5">
               <button
-                onClick={() => useDemoAccount('customer')}
+                onClick={() => fillDemoAccount('customer')}
                 className="flex items-center space-x-3 text-left hover:bg-white px-3 py-2.5 rounded-lg transition-colors group"
               >
                 <User className="w-4 h-4 text-blue-600 flex-shrink-0" />
@@ -214,7 +214,7 @@ const Login = () => {
                 </div>
               </button>
               <button
-                onClick={() => useDemoAccount('provider')}
+                onClick={() => fillDemoAccount('provider')}
                 className="flex items-center space-x-3 text-left hover:bg-white px-3 py-2.5 rounded-lg transition-colors group"
               >
                 <Briefcase className="w-4 h-4 text-blue-600 flex-shrink-0" />
@@ -224,7 +224,7 @@ const Login = () => {
                 </div>
               </button>
               <button
-                onClick={() => useDemoAccount('admin')}
+                onClick={() => fillDemoAccount('admin')}
                 className="flex items-center space-x-3 text-left hover:bg-white px-3 py-2.5 rounded-lg transition-colors group"
               >
                 <Shield className="w-4 h-4 text-blue-600 flex-shrink-0" />

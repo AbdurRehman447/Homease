@@ -11,6 +11,8 @@ const Services = () => {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCity, setSelectedCity] = useState(searchParams.get('city') || '');
+  const [selectedServiceId, setSelectedServiceId] = useState(searchParams.get('service') || '');
+  const [selectedServiceName, setSelectedServiceName] = useState(searchParams.get('serviceName') || '');
   const [filters, setFilters] = useState({
     category: searchParams.get('category') || '',
     search: searchParams.get('search') || '',
@@ -22,18 +24,54 @@ const Services = () => {
   const categories = [...new Set(services.map(s => s.category))];
   const locations = [...new Set(providers.map(p => p.city))];
 
-  // Fetch services and providers
+  // Keep state in sync with URL params
+  useEffect(() => {
+    setSelectedCity(searchParams.get('city') || '');
+    setSelectedServiceId(searchParams.get('service') || '');
+    setSelectedServiceName(searchParams.get('serviceName') || '');
+  }, [searchParams]);
+
+  // Resolve service ID: URL may have numeric id (static) or UUID (backend). Resolve by name if needed.
+  const resolveServiceId = (servicesList, paramId, paramName) => {
+    if (!paramId && !paramName) return null;
+    const list = servicesList || [];
+    const byId = list.find((s) => String(s.id) === String(paramId));
+    if (byId) return byId.id;
+    if (paramName) {
+      const byName = list.find(
+        (s) => s.name && paramName && s.name.toLowerCase() === paramName.toLowerCase()
+      );
+      if (byName) return byName.id;
+    }
+    return paramId || null;
+  };
+
+  // Fetch services first, then providers with resolved service ID (so static 1,2,3 → DB UUID)
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const [servicesRes, providersRes] = await Promise.all([
-          servicesAPI.getAll({ isActive: true }),
-          providersAPI.getAll({ city: selectedCity, status: 'APPROVED' })
-        ]);
-        setServices(servicesRes.data.data);
-        setProviders(providersRes.data.data);
-        setFilteredProviders(providersRes.data.data);
+        if (!selectedCity) return;
+
+        const servicesRes = await servicesAPI.getAll({ isActive: true, limit: 100 });
+        const servicesList = servicesRes?.data?.data || [];
+        setServices(servicesList);
+
+        const effectiveServiceId = resolveServiceId(
+          servicesList,
+          selectedServiceId,
+          selectedServiceName
+        );
+
+        const providersRes = await providersAPI.getAll({
+          city: selectedCity,
+          service: effectiveServiceId || undefined,
+          status: 'APPROVED',
+          limit: 500,
+        });
+        const list = providersRes?.data?.data || [];
+        setProviders(list);
+        setFilteredProviders(list);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
@@ -41,14 +79,14 @@ const Services = () => {
       }
     };
     fetchData();
-  }, [selectedCity]);
+  }, [selectedCity, selectedServiceId, selectedServiceName]);
 
   // Redirect to city selection if no city is selected
   useEffect(() => {
     if (!selectedCity) {
       navigate('/select-city', { replace: true });
     }
-  }, []);
+  }, [selectedCity, navigate]);
 
   const handleCityChange = () => {
     navigate('/select-city');
@@ -56,21 +94,6 @@ const Services = () => {
 
   useEffect(() => {
     let filtered = [...providers];
-
-    // Filter by selected city FIRST (most important)
-    if (selectedCity) {
-      filtered = filtered.filter(p => p.city === selectedCity);
-    }
-
-    // Filter by category
-    if (filters.category) {
-      const categoryServices = services
-        .filter(s => s.category === filters.category)
-        .map(s => s.id);
-      filtered = filtered.filter(p => 
-        p.services?.some(ps => categoryServices.includes(ps.serviceId))
-      );
-    }
 
     // Filter by search query (matches provider and their services)
     if (filters.search) {
@@ -91,13 +114,8 @@ const Services = () => {
       filtered = filtered.filter(p => p.rating >= minRating);
     }
 
-    // Filter by location (additional filter on top of city)
-    if (filters.location) {
-      filtered = filtered.filter(p => p.city === filters.location);
-    }
-
     setFilteredProviders(filtered);
-  }, [filters, selectedCity, providers, services]);
+  }, [filters.search, filters.rating, providers]);
 
   const handleFilterChange = (filterName, value) => {
     setFilters(prev => ({
@@ -134,7 +152,9 @@ const Services = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div>
-                <p className="text-sm text-white/80">Services in</p>
+                <p className="text-sm text-white/80">
+                  {selectedServiceName ? `${selectedServiceName} in` : 'Services in'}
+                </p>
                 <p className="text-xl font-bold">{selectedCity}</p>
               </div>
             </div>
@@ -183,6 +203,7 @@ const Services = () => {
                 <select
                   value={filters.category}
                   onChange={(e) => handleFilterChange('category', e.target.value)}
+                  disabled={Boolean(selectedServiceId)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 >
                   <option value="">All Categories</option>
@@ -235,6 +256,7 @@ const Services = () => {
                 <select
                   value={filters.location}
                   onChange={(e) => handleFilterChange('location', e.target.value)}
+                  disabled={true}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 >
                   <option value="">All Locations</option>
@@ -275,7 +297,12 @@ const Services = () => {
                 {filteredProviders.length > 0 ? (
                   <div className="grid grid-cols-1 gap-6">
                     {filteredProviders.map((provider) => (
-                      <ProviderCard key={provider.id} provider={provider} />
+                      <ProviderCard
+                        key={provider.id}
+                        provider={provider}
+                        selectedServiceId={selectedServiceId}
+                        selectedServiceName={selectedServiceName}
+                      />
                     ))}
                   </div>
                 ) : (
