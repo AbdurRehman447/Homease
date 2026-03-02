@@ -97,6 +97,9 @@ model Provider {
   totalReviews  Int            @default(0)
   totalBookings Int            @default(0)
   completionRate Float         @default(0)
+  reliabilityScore Float       @default(0)    // 0-100 score based on multiple factors
+  responseRate   Float         @default(0)    // % of messages replied to
+  cancellationRate Float       @default(0)    // % of bookings cancelled by provider
   responseTime  String?        // e.g., "2-4 hours"
   joinedDate    DateTime       @default(now())
   verificationToken String?

@@ -14,10 +14,10 @@ export const getAllProviders = asyncHandler(async (req, res) => {
     search,
     status = 'ACTIVE',
   } = req.query;
-  
+
   const skip = (parseInt(page) - 1) * parseInt(limit);
   const take = parseInt(limit);
-  
+
   // Build filter conditions
   const where = {
     status,
@@ -39,7 +39,7 @@ export const getAllProviders = asyncHandler(async (req, res) => {
       },
     }),
   };
-  
+
   // Get providers with count
   const [providers, total] = await Promise.all([
     prisma.provider.findMany({
@@ -60,6 +60,9 @@ export const getAllProviders = asyncHandler(async (req, res) => {
         totalReviews: true,
         totalBookings: true,
         completionRate: true,
+        reliabilityScore: true,
+        responseRate: true,
+        cancellationRate: true,
         responseTime: true,
         isVerified: true,
         services: {
@@ -70,13 +73,14 @@ export const getAllProviders = asyncHandler(async (req, res) => {
         },
       },
       orderBy: [
+        { reliabilityScore: 'desc' },
         { rating: 'desc' },
         { totalReviews: 'desc' },
       ],
     }),
     prisma.provider.count({ where }),
   ]);
-  
+
   return paginatedResponse(res, 'Providers retrieved successfully', providers, {
     page: parseInt(page),
     limit: parseInt(limit),
@@ -87,7 +91,7 @@ export const getAllProviders = asyncHandler(async (req, res) => {
 // Get single provider by ID
 export const getProviderById = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  
+
   const provider = await prisma.provider.findUnique({
     where: { id },
     select: {
@@ -131,11 +135,11 @@ export const getProviderById = asyncHandler(async (req, res) => {
       },
     },
   });
-  
+
   if (!provider) {
     throw createError.notFound('Provider not found');
   }
-  
+
   return successResponse(res, 'Provider retrieved successfully', provider);
 });
 
@@ -143,7 +147,7 @@ export const getProviderById = asyncHandler(async (req, res) => {
 export const updateProviderProfile = asyncHandler(async (req, res) => {
   const { userId } = req.user;
   const { bio, experience, address, city, location, responseTime } = req.body;
-  
+
   const provider = await prisma.provider.update({
     where: { id: userId },
     data: {
@@ -167,7 +171,7 @@ export const updateProviderProfile = asyncHandler(async (req, res) => {
       responseTime: true,
     },
   });
-  
+
   return successResponse(res, 'Profile updated successfully', provider);
 });
 
@@ -175,12 +179,12 @@ export const updateProviderProfile = asyncHandler(async (req, res) => {
 export const updateProviderServices = asyncHandler(async (req, res) => {
   const { userId } = req.user;
   const { services } = req.body; // Array of { serviceId, price, description }
-  
+
   // Delete existing services
   await prisma.providerService.deleteMany({
     where: { providerId: userId },
   });
-  
+
   // Create new service mappings
   const providerServices = services.map((service) => ({
     providerId: userId,
@@ -188,11 +192,11 @@ export const updateProviderServices = asyncHandler(async (req, res) => {
     price: parseFloat(service.price),
     description: service.description || null,
   }));
-  
+
   await prisma.providerService.createMany({
     data: providerServices,
   });
-  
+
   // Get updated provider with services
   const provider = await prisma.provider.findUnique({
     where: { id: userId },
@@ -204,14 +208,14 @@ export const updateProviderServices = asyncHandler(async (req, res) => {
       },
     },
   });
-  
+
   return successResponse(res, 'Services updated successfully', provider);
 });
 
 // Get provider stats (Provider only)
 export const getProviderStats = asyncHandler(async (req, res) => {
   const { userId } = req.user;
-  
+
   const [provider, bookingStats] = await Promise.all([
     prisma.provider.findUnique({
       where: { id: userId },
@@ -228,7 +232,7 @@ export const getProviderStats = asyncHandler(async (req, res) => {
       _count: { status: true },
     }),
   ]);
-  
+
   const stats = {
     overview: provider,
     bookingsByStatus: bookingStats.reduce((acc, stat) => {
@@ -236,7 +240,7 @@ export const getProviderStats = asyncHandler(async (req, res) => {
       return acc;
     }, {}),
   };
-  
+
   return successResponse(res, 'Stats retrieved successfully', stats);
 });
 
@@ -244,7 +248,7 @@ export const getProviderStats = asyncHandler(async (req, res) => {
 export const updateProviderStatus = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { status } = req.body; // APPROVED, REJECTED, SUSPENDED
-  
+
   const provider = await prisma.provider.update({
     where: { id },
     data: { status },
@@ -255,7 +259,7 @@ export const updateProviderStatus = asyncHandler(async (req, res) => {
       status: true,
     },
   });
-  
+
   return successResponse(res, `Provider status updated to ${status}`, provider);
 });
 
